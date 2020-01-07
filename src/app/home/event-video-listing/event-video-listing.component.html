@@ -1,0 +1,101 @@
+<!--<div class="container">
+        <div class="row">
+           <div class="col-md-4">
+              <div> 
+               <p></p>
+               <ul class="chat-box">
+                  <li *ngFor="let video of videoListing">                       
+                      <div (click)="putVideoSource(video)" class="user-details">
+                           <img style="height:100px;width:100px;" src="https://png.seekclipart.com/clipng/s/34-346702_data-science-video-watch-video-icon-png-clipart.png">
+                      </div>
+                  </li>
+                  
+               </ul>
+              </div>
+           </div>
+           <div class="col-md-8">
+                  <p></p>
+                  <video width="400" height="200" controls>
+                       <source src="{{videoSrc}}" type="video/mp4">
+                 </video>
+              
+          </div>
+        </div>
+      </div>-->
+
+
+
+      <div class="container">
+            <div class="video-cum-outer">
+
+               <div class="row mb-3">
+                  <div class="col-md-12">
+                     <button (click)="goBack()"  class="btn-primary-back">
+                              <i class="fa fa-angle-left"></i>
+                              Back
+                     </button>
+                  </div>
+               </div>
+
+               <div class="row mb-3">
+                  <div class="col-md-10">
+                     <div>
+                        <p class="device-id-name">{{deviceId}}</p>
+                        <p class="device-id-about">2019 Geep Compass</p>
+                     </div>
+                  </div>
+                 
+               </div>
+
+               <div class="row mb-3">
+               
+                  <div class="col-md-12">
+                     <div class="current-status-outer">
+                        <p><span class="primary-color-theme font-weight-bold pl-0">Videos ({{videoListing.length}})</span><a href="{{downloadUrl}}" class="primary-color-theme" download><i class="fa fa-download" aria-hidden="true"></i></a></p> 
+                     </div>
+                  </div>
+               </div>
+              
+                <div class="row position-relative">                     
+                     
+
+                    <div class="col-md-12">
+                     <div class="video-padding">
+                       
+
+                           
+                       <div class="row pr-md-4">
+
+                       
+                        <div class="col-md-8 mx-auto" *ngFor="let video of videoListing">
+                            <div class="plk-video-outer" >
+                                <div class="plk-videobox">
+                            
+                                   
+                                        <video  class="video-layer-plk"  controls>
+                                             <source [src]="video" type="video/webm">
+                                             <source [src]="video" type="video/mp4">
+                                           Your browser does not support the video tag.
+                                        </video>
+                                </div>
+                                
+                            </div>
+                        </div>
+    
+                        
+
+
+                    
+
+                        
+
+                       </div> 
+                  
+                       </div>
+                    </div>
+                   
+                    
+    
+                </div>
+            </div>
+        </div>

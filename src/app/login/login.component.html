@@ -1,0 +1,73 @@
+<section class="plk-login">
+        <div class="container-fluid pl-md-0">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="login--thumb--img">
+                        <img src="assets/images/login-thumb.png">
+                    </div>
+                </div>
+                
+                <div class="col-lg-5">
+                    <div class="login-content_outer">
+                        <div class="login-content_plk-logo">
+                            <img src="assets/images/plk-logo.png">
+                        </div>
+                        <div class="login--content--plk__heading">
+                            <h2>Welcome Back, Please login
+                                to your account</h2>
+                        </div>
+                        <div class="social-login">
+                            <a (click)="signInWithGoogle()" href="#" class="plk-social--login"><span><i class="fa  fa-google-plus"></i></span>Sign In with Google+</a>
+                        </div>
+                        <p class="optional-login-heading">- Or sign in with your <span class="plk-primary-color">PLK</span> account -</p>
+                        <div class="plk--form--outer">
+                            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                               
+                                <div class="form-rows">
+                                    <label for="email">
+                                        Email Address
+                                    </label>
+                                    <input type="text" formControlName="email">
+                                    <div class="error_outer" *ngIf="loginForm.controls.email.touched">
+                                        <app-form-validation-errors errorPrefix="Email " [errors]="loginForm.get('email').errors"></app-form-validation-errors>
+                                    </div>
+                                </div>
+                                <div class="form-rows">
+                                        <label for="password">
+                                            Password
+                                        </label>
+                                        <input type="password" formControlName="password">
+                                        <div class="error_outer" *ngIf="loginForm.controls.password.touched">
+                                            <app-form-validation-errors errorPrefix="Password " minLength=10 maxLength=50 [errors]="loginForm.get('password').errors"></app-form-validation-errors>
+                                        </div>
+                                </div>
+                                <div class="form-rows">
+                                    <div class="row">
+                                        <div class="col-6">
+                                        <label class="contain">Remember me
+                                            <input formControlName="remember_me" type="checkbox">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        </div>
+                                        <div class="col-6 text-left text-lg-right">
+                                            <a href="#" class="btn-pwd">Forgot password ?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                               <div class="form-rows">
+                                <!--<a href="#" class="plk-login-btn">login</a>-->
+                                <button  [ngClass]="{ 'btn-disable': !loginForm.valid }" type="submit" class="plk-login-btn">login
+                                </button>
+                                </div>
+                                <div class="">
+                                    <p class="terms-para"><span>By signing up, you agree to our</span>
+                                    <a href="#" class="condition-btn">Terms and Conditions</a> & <a href="#" class="condition-btn">Privacy Policy</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>

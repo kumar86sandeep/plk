@@ -1,0 +1,42 @@
+<nav *ngIf="isLoggedin" class="navbar navbar-expand-lg navbar-dark static-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+          Logo
+      </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse nav_head" id="navbarResponsive">
+      <ul class="navbar-nav">
+        <li class="nav-item active overview-text">
+          <a class="nav-link" href="#">Overview </a>
+        </li>
+
+            
+      </ul>
+      
+      <div class="nav-item_end ml-auto">
+        <div class="user-profile-menubar">
+          <span class="profile-username">
+            {{loggedinUserObject?.firstName}}
+          </span>
+          <div class="profile-pic">
+            <img *ngIf="!loggedinUserObject?.photoUrl" src="assets/images/user-pic.jpg">
+            <img *ngIf="loggedinUserObject?.photoUrl" src="{{loggedinUserObject?.photoUrl}}">
+          </div>
+          <span class="dropdown-menu-show">
+            <img src="assets/images/arrow-down.png">
+            <div class="dropdown-area-profile">
+                <ul class="list-unstyled mb-0">
+                  <li><a href="#">Overview</a></li>           
+                  <li><a href="javascript:void(0)" (click)="logout()">Log out</a></li>
+                </ul>
+              </div>
+          </span>
+        
+        </div>
+      </div>
+
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,143 @@
+
+      <!--<div class="container">
+            <h2>Dash Cam Report - {{deviceId}}</h2> 
+            <h2>StillCut List</h2>           
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>StillCut</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="stillcutListing.length>0">
+                <tr *ngFor="let stillcut of stillcutListing">
+                  <td>
+                        <i class="fa fa-desktop" aria-hidden="true"></i>
+                 </td>
+                 <td>
+                        {{stillcut.id}}
+                 </td>
+                  
+                </tr>      
+              </tbody>
+          
+              <tbody *ngIf="stillcutListing.length<=0">
+                <tr>
+                  <td>No record found.</td>        
+                </tr>      
+              </tbody>
+            </table>
+          </div>-->
+
+          <div class="container"> 
+
+              <div class="report-cum-outer">
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                      <button (click)="goBack()" class="btn-primary-back">
+                          <i class="fa fa-angle-left"></i>
+                          Back
+                      </button>
+                  </div>
+                </div>
+                  
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                      <div>
+                          <p class="device-id-name">{{deviceId}}</p>
+                          <p class="device-id-about">2019 Geep Compass</p>
+                      </div>
+                  </div>
+                </div>
+          
+                <div class="row mb-3">
+                  <div class="col-md-12">
+                      <div class="current-status-outer">
+                          <p><span class="pl-0 text-uppercase primary-color-theme font-weight-bold">StillCut Listing</span></p>
+                    </div>
+                  </div>
+                </div>
+          
+                <div class="row">
+                    <div class="col-md-12">
+                                <table class="table100-customization">
+                                    <thead>
+                                        <tr>
+                                            <th class="cell-100">#id</th>
+                                            <th class="cell-100">StillCut</th>
+                                            <th class="cell-100">Time</th> 
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngIf="stillcutListing.length>0">
+                                        <tr *ngFor="let stillcut of stillcutListing" class="rowbody">
+                                            <td><a href="javascript:void(0)" (click)="stillcutImage(stillcut)">#{{stillcut.id}}</a></td>
+
+                                            <td style="cursor: pointer;"><div (click)="stillcutImage(stillcut)"><i class="fa fa-desktop" aria-hidden="true"></i></div></td>
+                                            <td>{{formatCutlistDatetime(stillcut)}}</td>
+                                            
+                                           
+                                         
+                                       </tr>                               
+                                  </tbody>                               
+
+        
+                                  <tbody *ngIf="stillcutListing.length<=0">
+                                    <tr>
+                                      <td style="text-align:center" colspan="4">No record found.</td>        
+                                    </tr>      
+                                  </tbody>
+                                </table>
+                        </div>
+                    </div> 
+
+                  
+                                        
+                  <!--pagination starts-->
+                  <nav aria-label="Page navigation example" class="my_pagination">
+                      <ul class="pagination justify-content-end">
+                        <li class="page-item">                    
+                          <button class="page-link" [ngClass]="{'activeCls': paginate.offset >1 }" (click)="applyPagination('prev')" [disabled]="paginate.offset <= 1" type="button"><i style="color:#ffffff" class="fa fa-angle-left" aria-hidden="true"></i></button>
+                        </li>
+                      
+                        <li class="page-item">
+                            <button [ngClass]="{'activeCls': hasMorePages }" [disabled]="!hasMorePages" class="page-link" type="button" (click)="applyPagination('next')"><i style="color:#ffffff" class="fa fa-angle-right" aria-hidden="true"></i></button>
+                        </li>
+                      </ul>
+                    </nav>
+                  <!--pagination ends-->
+                  </div>
+          
+          </div>
+
+
+
+<!-- Stillcut images Modal -->
+<div class="modal fade" #stillcutImagesSection id="stillcutImagesSection" tabindex="-1" role="dialog" aria-labelledby="loginOTPForm">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stillcutImagesSection" style="text-transform:none">Stillcut Images.</h5>        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="images.length>0"> 
+       
+        <div class="row">
+            <div class="col-6" *ngFor="let image of images">
+                <img [src]=image width="100%">
+            </div>
+        </div>
+        <div class="row p-3">
+            <div class="col-12">
+                <button type="button" class="btn-primary-back" (click)="requestEvent()">Request Video</button>
+            </div>
+        </div>
+        <ng-template #loading><div class="text-center"><img src="/assets/images/content-loader.gif"></div></ng-template>          
+    </div>
+
+    <div class="modal-body" *ngIf="images.length<=0">
+      <div class="row"><div class="col-12 text-center">No Stillcut image.</div></div>
+    </div>
+  </div>
+</div>
