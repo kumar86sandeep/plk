@@ -1,55 +1,19 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from "@angular/router";
-import { Location } from '@angular/common';
 import {NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
-
 
 import { DataService, CommonUtilsService, UserAuthService, TitleService } from '../../core/services/index'
 
 
-
-interface Log {
-	ldState: any;
-	ldwState: any;
-	vdState: any;
-  pdState: any;
-  tsrState: any;
-  tsrWarning: any;
-  event: any;
-  dsmState: any;
-  dsmWarning: any;
-  tasWarning: any;
-  rearPDState: any;
-  lat: any;
-  lng: any;
-}
 
 @Component({
   selector: 'app-device-logs',
   templateUrl: './device-logs.component.html',
   styleUrls: ['./device-logs.component.css']
 })
-export class DeviceLogsComponent implements OnInit {
-  
-  logsCount:any={
-    ldState: 0,
-    ldwState:0,
-    vdState: 0,
-    pdState: 0,
-    tsrState: 0,
-    tsrWarning: 0,
-    event: 0,
-    dsmState: 0,
-    dsmWarning: 0,
-    tasWarning: 0,
-    rearPDState: 0,
-    lat: 0,
-    lng: 0
-  };
-  deviceId:any;
-  logsDate: any;
-  logsDateSearchForm: FormGroup;
+export class DeviceLogsComponent implements OnInit { 
+   
   deviceMarkers:any = []
   deviceAddress:string;
   // google maps zoom level
@@ -60,33 +24,23 @@ export class DeviceLogsComponent implements OnInit {
   locatorIconActive:string = "/assets/images/icon-blue.png"
   locatorIconInactive:string = "/assets/images/icon-red.png"
   previousInfoWindow:any;
+  deviceId: string;
 
-  constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private userAuthService:UserAuthService, private commonUtilsService:CommonUtilsService, private titleService:TitleService, private router: Router, private calendar: NgbCalendar, private formBuilder: FormBuilder, private ngZone: NgZone) { 
+  constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private userAuthService:UserAuthService, private commonUtilsService:CommonUtilsService, private titleService:TitleService, private router: Router, private calendar: NgbCalendar, private formBuilder: FormBuilder, private ngZone: NgZone) { 
     this.userAuthService.isLoggedIn(true);//trigger loggedin observable 
     if(!this.activatedRoute.snapshot.params.deviceId){
       this.router.navigate(['/home/listing'])
     }
-    this.deviceId = this.activatedRoute.snapshot.params.deviceId 
-    this.logsDate = this.calendar.getToday();
+    this.deviceId = this.activatedRoute.snapshot.params.deviceId     
   }
 
   async ngOnInit() {      
-    this.titleService.setTitle();
-    this.logsDateSearchForm = this.formBuilder.group({
-      logSearchDate: [this.logsDate]     
-    });
-
-    await this.fetchDevices()
-    await this.fetchDeviceLogs()     
+    this.titleService.setTitle();  
+    await this.fetchDevices()    
   }
-
-  onSelectDate(event: any): void {    
-    this.logsDate = {
-      year:event.year, month:event.month, day:event.day
-    }
-    this.fetchDeviceLogs()
-  }
+  
   fetchDeviceAddress(marker){
+    console.log('marker',marker)
     let geoCoder = new google.maps.Geocoder;
     geoCoder.geocode({ 'location': { lat: marker.latitude, lng: marker.longitude } }, (results, status) => {
      
@@ -108,42 +62,7 @@ export class DeviceLogsComponent implements OnInit {
   }
 
   
-  fetchDeviceLogs(){
-    let searchLogObject = {
-      date:this.logsDate,
-      serialNumber:this.deviceId
-    }
-    this.commonUtilsService.showPageLoader(); 
-    this.dataService.listingDeviceLogs(searchLogObject).subscribe(response => {
-        this.logsCount = {
-          ldwLState:0,
-          ldwRState:0,
-          vdState:0,
-          pdState:0
-
-        }
-        if(response != null && response.length>0){
-          
-          this.ngZone.run( () => {
-            //calculating ldwState count
-            let ldwLeftStateLogs = response.filter((log) => (log.ldwState == 1)).map((log) => log);          
-            //this.logsCount['ldwState'] = ldwLeftStateLogs.length;
-
-            let ldwRightStateLogs = response.filter((log) => (log.ldwState == 2)).map((log) => log);          
-            this.logsCount['ldwLState'] = ldwLeftStateLogs.length;
-            this.logsCount['ldwRState'] = ldwRightStateLogs.length; 
-
-           });
-
-                  
-        }      
-          
-        console.log(this.logsCount);
-        this.commonUtilsService.hidePageLoader();
-     }, error => {
-        this.commonUtilsService.onError(error);
-     }) 
-  }
+  
 
   fetchDevices(){
       this.commonUtilsService.showPageLoader(); 
@@ -159,8 +78,8 @@ export class DeviceLogsComponent implements OnInit {
       }
       this.deviceMarkers[index]['isOpen'] = true   
       console.log('deviceMarkers',this.deviceMarkers);  
-      this.lat = this.deviceMarkers[index]['latitude'] 
-      this.lng = this.deviceMarkers[index]['longitude'] 
+      this.lat = (this.deviceMarkers[index]['latitude']==0)?this.lat:this.deviceMarkers[index]['latitude']
+      this.lng = (this.deviceMarkers[index]['longitude']==0)?this.lng:this.deviceMarkers[index]['longitude']
       this.fetchDeviceAddress(this.deviceMarkers[index]);
       this.commonUtilsService.hidePageLoader();     
     }, error => {
@@ -175,14 +94,7 @@ export class DeviceLogsComponent implements OnInit {
     this.lat = this.deviceMarkers[index]['latitude'] 
     this.lng = this.deviceMarkers[index]['longitude']  
     this.fetchDeviceAddress(marker);
-    this.fetchDeviceLogs()
   }
-
-
-
- goBack(){
-  this.location.back();
- }
 
  clickedMarker(infowindow) {
   if (this.previousInfoWindow) {

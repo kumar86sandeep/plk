@@ -1,95 +1,86 @@
-<div class="container"> 
-
-    <div class="report-cum-outer">
-      <div class="row mb-3">
-        <div class="col-md-12">
-            <button (click)="goBack()" class="btn-primary-back">
-                <i class="fa fa-angle-left"></i>
-                Back
-            </button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+         <app-device-info-leftside [deviceId]="deviceId"></app-device-info-leftside>
         </div>
-      </div>
-        
-      <div class="row mb-3">
-        <div class="col-md-12">
-            <div>
-                <p class="device-id-name">{{deviceId}}</p>
-                <p class="device-id-about">2019 Geep Compass</p>
-            </div>
-        </div>
-      </div>
 
-      <div class="row mb-3">
-        <div class="col-md-12">
-            <div class="current-status-outer">
-                <p><span class="pl-0 text-uppercase primary-color-theme font-weight-bold">DASH CAM EVENT</span></p>
-          </div>
-        </div>
-      </div>
-
-        <div class="row mb-4">
-            <div class="col-md-4">
-              <div class="position-relative">
-                <i class="fa fa-search device-listing-fa-search"></i>
-                <input type="search" class="search-custom" placeholder="Search Dash Cam Events">
+        <div class="col-md-9 px-0">          
+          <div class="report-cum-outer">  
+            <div class="row mb-3">
+              <div class="col-md-12">
+                  <div class="current-status-outer">
+                      <p><span class="pl-0 text-uppercase primary-color-theme font-weight-bold">DASH CAM EVENT</span></p>
+                </div>
               </div>
             </div>
+
+              <div class="row mb-4">
+                  <div class="col-md-4">
+                    <div class="position-relative">
+                      <!--<i class="fa fa-search device-listing-fa-search"></i>
+                      <input type="search" class="search-custom" placeholder="Search Dash Cam Events">-->
+                      <form [formGroup]="eventsDateSearchForm">
+
+                        <input readonly formControlName="eventsSearchDate" class="form-control" type="text"
+                        (dateSelect)="onSelectDate($event)" (click)="eventDate.toggle()" ngbDatepicker #eventDate="ngbDatepicker">
+                        <span class="calender-fa"> <button class="calendar bg-transparent border-0 text-white" (click)="eventDate.toggle()" type="button" #buttonEl><i class="fa fa-calendar" aria-hidden="true"></i></button></span> 
+                      </form>
+
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-8 text-center text-lg-right">
+                    
+                  </div>
+              </div>
+              <perfect-scrollbar style="max-width: 100%; max-height: 570px;">
+                  <div class="row">
+                      <div class="col-md-12">
+                              <table class="table100-customization">
+                                  <thead>
+                                      <tr>
+                                          <th class="cell-100">Event time</th>
+                                          <th class="cell-100">Event type</th>                                        
+                                          <th class="cell-100">Request video</th>
+                                          <th class="cell-100">Download</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody *ngIf="eventListing.length>0">
+                                      <tr *ngFor="let event of eventListing" class="rowbody">
+                                          <td>{{formatEventDatetime(event.eventTime)}}</td>
+                                          <td *ngIf="event.eventType!='DCA_EVENT_TYPE_GSensor_Light'">{{mapEvent(event.eventType)}}</td>
+                                          <td *ngIf="event.eventType=='DCA_EVENT_TYPE_GSensor_Light'"><span style="cursor: pointer;" (click)="requestEvent(event.fileName)">{{mapEvent(event.eventType)}}</span></td>                                     
+                                          <td><a href="javascript:void(0)" (click)="eventVideos(event.fileKey)"><i class="fa  fa-play-circle"></i></a></td>
+                                          <td><a href="{{downloadVideo(event.fileKey)}}" download><i class="fa fa-download"></i></a></td>
+                                      
+                                    </tr>                               
+                                </tbody>
+
+                                <tbody *ngIf="eventListing.length<=0">
+                                  <tr>
+                                    <td style="text-align:center" colspan="4">No record found.</td>        
+                                  </tr>      
+                                </tbody>
+                              </table>
+                      </div>
+                  </div> 
+              </perfect-scrollbar>
+          </div>
+       
+        <!--pagination starts-->
+          <!--<nav aria-label="Page navigation example" class="my_pagination">
+            <ul class="pagination justify-content-end">
+              <li class="page-item">                    
+                <button class="page-link" [ngClass]="{'activeCls': paginate.offset >1 }" (click)="applyPagination('prev')" [disabled]="paginate.offset <= 1" type="button"><i style="color:#ffffff" class="fa fa-angle-left" aria-hidden="true"></i></button>
+              </li>
             
-            <div class="col-md-8 text-center text-lg-right">
-              <p class="report-address-title">97 dash cam events from Oct 14, 2019 12:00 AM - Nov 1, 2019 6:25 PM</p>  
-            </div>
+              <li class="page-item">
+                  <button [ngClass]="{'activeCls': hasMorePages }" [disabled]="!hasMorePages" class="page-link" type="button" (click)="applyPagination('next')"><i style="color:#ffffff" class="fa fa-angle-right" aria-hidden="true"></i></button>
+              </li>
+            </ul>
+          </nav>-->
+        <!--pagination ends-->
         </div>
-        
-        <div class="row">
-            <div class="col-md-12">
-                        <table class="table100-customization">
-                            <thead>
-                                <tr>
-                                    <th class="cell-100">Event time</th>
-                                    <th class="cell-100">Event type</th>
-                                    <th class="cell-100">Driver</th>
-                                    <th class="cell-100 text-center">Request video</th>
-                                    <th class="cell-100">Download</th>
-                                </tr>
-                            </thead>
-                            <tbody *ngIf="eventListing.length>0">
-                                <tr *ngFor="let event of eventListing" class="rowbody">
-                                    <td>{{formatEventDatetime(event.eventTime)}}</td>
-                                    <td>{{mapEvent(event.eventType)}}</td>
-                                    <td>Paul</td>
-                                    <td><a href="javascript:void(0)" (click)="eventVideos(event.fileKey)"><i class="fa  fa-play-circle"></i></a></td>
-                                    <td><a href="{{downloadVideo(event.fileKey)}}" download><i class="fa fa-download"></i></a></td>
-                                 
-                               </tr>                               
-                          </tbody>
-
-                          <tbody *ngIf="eventListing.length<=0">
-                            <tr>
-                              <td style="text-align:center" colspan="4">No record found.</td>        
-                            </tr>      
-                          </tbody>
-                        </table>
-                </div>
-            </div> 
-            
-
-              
-
-
-            <!--pagination starts-->
-            <nav aria-label="Page navigation example" class="my_pagination">
-                <ul class="pagination justify-content-end">
-                  <li class="page-item">                    
-                    <button class="page-link" [ngClass]="{'activeCls': paginate.offset >1 }" (click)="applyPagination('prev')" [disabled]="paginate.offset <= 1" type="button"><i style="color:#ffffff" class="fa fa-angle-left" aria-hidden="true"></i></button>
-                  </li>
-                
-                  <li class="page-item">
-                      <button [ngClass]="{'activeCls': hasMorePages }" [disabled]="!hasMorePages" class="page-link" type="button" (click)="applyPagination('next')"><i style="color:#ffffff" class="fa fa-angle-right" aria-hidden="true"></i></button>
-                  </li>
-                </ul>
-              </nav>
-            <!--pagination ends-->
-        </div>
-
+    </div>
 </div>
  

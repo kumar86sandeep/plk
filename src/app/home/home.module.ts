@@ -14,6 +14,7 @@ import { DeviceEventsListingComponent } from './device-events-listing/device-eve
 import { EventVideoListingComponent } from './event-video-listing/event-video-listing.component';
 import { DeviceLogsComponent } from './device-logs/device-logs.component';
 import { StillCutComponent } from './still-cut/still-cut.component';
+import { DeviceInfoLeftsideComponent } from './device-info-leftside/device-info-leftside.component';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -25,7 +26,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DeviceEventsListingComponent,
     EventVideoListingComponent,
     DeviceLogsComponent,
-    StillCutComponent
+    StillCutComponent,
+    DeviceInfoLeftsideComponent
   ],
   
   imports: [

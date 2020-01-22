@@ -882,3 +882,11 @@ video.video-layer-plk {
 .map-marker-date-custom .btn.btn-outline-secondary.calendar i {font-size:20px;} 
 .map-marker-date-custom input {border-radius:0px;}
 .map-marker-date-custom .dropdown-menu.show {left:102% !important;}
+.tabletitle p{ padding:10px 0 !important}
+.swal2-icon{
+    width: 4em !important;
+    height: 4em!important;
+}
+.swal2-title{
+    font-size: 15px!important;
+}

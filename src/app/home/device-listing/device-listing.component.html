@@ -67,7 +67,8 @@
         [longitude]="lng"
         [zoom]="zoom"
         [disableDefaultUI]="false"
-        [zoomControl]="false"
+        [zoomControl]="true"
+        [streetViewControl]="true"
         >      
         <agm-marker 
             *ngFor="let deviceMarker of deviceMarkers; let i = index"

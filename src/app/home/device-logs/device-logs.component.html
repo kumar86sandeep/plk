@@ -1,139 +1,20 @@
 <div class="container-fluid">
         <div class="row">
            <div class="col-md-3">
-              <div class="left-second-box-outer"> 
-
-                  <div class="row">
-                        <div class="col-md-6">
-                          <button (click)="goBack()" class="btn-primary-back">
-                              <i class="fa fa-angle-left"></i>
-                              Back
-                          </button>
-                        </div>
-                        
-                  </div>
-
-                  <div class="row mb-3 mt-4">
-                        <div class="col-md-8">
-                          <div>
-                              <p class="device-id-name">{{deviceId}}</p>
-                              <p class="device-id-about">2019 Geep Compass</p>
-                          </div>
-                        </div>
-                        <div class="col-md-4">
-
-                        </div>
-                  </div>
-
-                  <div class="row">
-                     <div class="col-md-12">
-                        <div class="current-status-outer">
-                              <p><span>Current Driver :</span> <span>David</span></p>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="row mt-3">
-                        <div class="col-md-12">
-                              <div class="current-location-outer">
-                                    <p>Location</p>
-                              </div>
-                        </div>
-                  </div>
-
-                  <div class="row">
-                        <div class="col-md-12" >
-                              <div class="map-marker-date" id='datetimepicker'>
-                                    <i class="fa fa-map-marker"></i>
-                                    <input type="text" alt="{{deviceAddress}}" title="{{deviceAddress}}" class="form-rows border-0" value="{{deviceAddress}}" readonly>                
-                                         
-                                    
-
-
-                                   
-                                    
-                              </div>
-                        </div>
-                  </div>
-
-                  <div class="row mt-3">
-                        <div class="col-md-12">
-                        <a class="btn-share-manual" routerLink="/home/still-cut/{{deviceId}}">
-                              <i class="fa fa-send"></i>
-                              Still Cut
-                        </a>
-                        <a class="btn-share-manual" routerLink="/home/device-events/{{deviceId}}">
-                              <i class="fa fa-video-camera"></i>
-                              Events Listing
-                        </a>
-                        </div>
-                  </div>
-
-                  <div class="row">
-                        <div class="col-md-12">
-                              <div class="map-marker-date-custom">
-                              <form [formGroup]="logsDateSearchForm">
-
-                                    <input readonly formControlName="logSearchDate" class="form-control" type="text"
-                                    (dateSelect)="onSelectDate($event)" (click)="logDate.toggle()" ngbDatepicker #logDate="ngbDatepicker">
-                                    <span class="calender-fa"> <button class="btn btn-outline-secondary calendar" (click)="logDate.toggle()" type="button" #buttonEl><i class="fa fa-calendar" aria-hidden="true"></i></button></span> 
-                              </form>
-                              </div>
-                        </div>
-                  </div>
-
-                  <div class="row mt-1">
-                     <div class="col-md-12">
-                           <h5 class="table-head-heading">ADAS Data</h5>
-
-                        <div class="table-outer-responsive">
-                                  
-                        <table class="table ads-table">
-                           <thead class="">
-                              <tr>
-                                <th scope="col">ITEM</th>
-                                <th scope="col">COUNT</th>
-                              </tr>
-                           </thead>
-
-                           <tbody>
-                                    <tr>
-                                          <th>LDW-R</th>
-                                          <th>{{logsCount?.ldwRState}}</th>
-                                    </tr>
-                                    <tr>
-                                          <th>LDW-L</th>
-                                          <th>{{logsCount?.ldwLState}}</th>
-                                    </tr>
-                                    <tr>
-                                          <th>vdState</th>
-                                          <th>{{logsCount?.vdState}}</th>
-                                    </tr>
-                                    <tr>
-                                          <th>pdState</th>
-                                          <th>{{logsCount?.pdState}}</th>
-                                    </tr>
-                              </tbody>     
-                             
-
-                        </table>
-                        </div>
-
-                     </div>
-                  </div>
-               
-              </div>
+             <app-device-info-leftside [deviceId]="deviceId"></app-device-info-leftside>
            </div>
+
            <div class="col-md-9 px-0">
           
                   
-      
+
       <agm-map 
       [latitude]="lat"
       [longitude]="lng"
       [zoom]="zoom"
       [disableDefaultUI]="false"
-      [zoomControl]="false"
+      [zoomControl]="true"
+      [streetViewControl]="true"
       >      
         <agm-marker 
             *ngFor="let deviceMarker of deviceMarkers; let i = index"

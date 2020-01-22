@@ -34,10 +34,11 @@ export class DataService {
             
     }
 
-    public listingDeviceEvents(paginate): Observable<any> { 
+    public listingDeviceEvents(searchObject): Observable<any> { 
          
-        console.log(paginate)
-        return this.httpClient.get(`${environment.PLKCONFIG.URL}video/event?tenanatId=${environment.PLKCONFIG.TENANATID}&SecretToken=${environment.PLKCONFIG.SECRETTOKEN}&serialNumber=${paginate.deviceId}&pageNum=${paginate.offset}&pageSize=${environment.PAGESIZE}`)
+        const dateObj = searchObject.eventsDate
+        console.log('dateObj',dateObj); 
+        return this.httpClient.get(`${environment.PLKCONFIG.URL}video/event/${dateObj['year']}/${dateObj['month']}/${dateObj['day']}?tenanatId=${environment.PLKCONFIG.TENANATID}&SecretToken=${environment.PLKCONFIG.SECRETTOKEN}&serialNumber=${searchObject.deviceId}`)
             
     }
 
@@ -57,6 +58,16 @@ export class DataService {
     public stillcutImage(stillcutObject): Observable<any> {       
 
         return this.httpClient.get(`${environment.PLKCONFIG.URL}video/stillcut?tenanatId=${environment.PLKCONFIG.TENANATID}&SecretToken=${environment.PLKCONFIG.SECRETTOKEN}&serialNumber=${stillcutObject.serialNumber}&lastKey=${stillcutObject.lastKey}&jpgTime=${stillcutObject.jpgTime}`)      
+            
+    }
+
+    public gensorLightVideoRequest(eventObject): Observable<any> {       
+        console.log('eventObject',eventObject);
+        return this.httpClient
+        .post(`${environment.PLKCONFIG.URL}cmd/video`, eventObject)
+        .map((response: any) => {        
+            return response;
+        })         
             
     }
 
