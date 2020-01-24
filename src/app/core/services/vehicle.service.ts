@@ -19,7 +19,7 @@ export class VehicleService {
 
  // apis to get data from server
     public getVehicles():Observable<any>{
-        return this.httpClient.get('/vehicles');
+        return this.httpClient.get('/plk/vehicles');
     }
     
 

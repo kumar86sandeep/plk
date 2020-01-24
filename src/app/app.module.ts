@@ -32,6 +32,7 @@ import { ApiIntercepter } from './core/intercepters/api.intercepter';
 import { TokenInterceptor } from './core/intercepters/token.interceptor';
 import { HttpErrorInterceptor } from './core/intercepters/http-error.interceptor';
 
+
  
 
 
@@ -81,6 +82,10 @@ export function provideConfig() {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor, multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiIntercepter, multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,
