@@ -59,13 +59,12 @@ export class DeviceEventsListingComponent implements OnInit {
       if (result.value) {
         var formData: any = new FormData();
         let newfilename = filename.slice(0, -4)
-        formData.append("serial", `"${this.deviceId}"`  );
-        formData.append("cmd", `"dlvideo"`);
+       
         formData.append("parameter", `"{currentVideo:${newfilename}}"`);
 
         
         this.commonUtilsService.showPageLoader('Processing...'); 
-          this.dataService.gensorLightVideoRequest(formData).subscribe(response => {
+          this.dataService.gensorLightVideoRequest(formData, this.deviceId).subscribe(response => {
             
             this.commonUtilsService.hidePageLoader(); 
             Swal.fire(
