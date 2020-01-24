@@ -18,37 +18,42 @@ export class HeaderComponent implements OnInit {
   isLoggedin:boolean = false;
   loggedinUserObject:any;
   constructor(private userAuthService:UserAuthService, private router: Router, private commonUtilsService:CommonUtilsService, private idle: Idle, private keepalive: Keepalive) {
+    
+    idle.setTimeout(60);
+    idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
+    idle.onIdleEnd.subscribe(() => this.idleState = 'No longer idle.');
+    idle.onTimeout.subscribe(() => {
+      this.idleState = 'Timed out!';
+      if(localStorage.getItem('loggedinSellerUser') || localStorage.getItem('loggedinDealerUser') )
+      this.logout()
+      this.timedOut = true;
+    });
+    idle.onIdleStart.subscribe(() => {
+      this.idleState = 'You\'ve gone idle!'
+       console.log('You have gone idle')
+    });
+    idle.onTimeoutWarning.subscribe((countdown) => this.idleState = 'You will time out in ' + countdown + ' seconds!');
+
+    // sets the ping interval to 15 seconds
+    keepalive.interval(15);
+
+    keepalive.onPing.subscribe(() => this.lastPing = new Date());
+
+    this.reset();
+    
     this.userAuthService.checkLoggedinStatus().subscribe((loginStatus) => {
       this.isLoggedin = loginStatus.isLoggedIn;   
+       
       this.fetchUser();
 
-      idle.setTimeout(60);
-      idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
-      idle.onIdleEnd.subscribe(() => this.idleState = 'No longer idle.');
-      idle.onTimeout.subscribe(() => {
-        this.idleState = 'Timed out!';
-        if(localStorage.getItem('loggedinSellerUser') || localStorage.getItem('loggedinDealerUser') )
-        this.logout()
-        this.timedOut = true;
-      });
-      idle.onIdleStart.subscribe(() => {
-        this.idleState = 'You\'ve gone idle!'
-         console.log('You have gone idle')
-      });
-      idle.onTimeoutWarning.subscribe((countdown) => this.idleState = 'You will time out in ' + countdown + ' seconds!');
-  
-      // sets the ping interval to 15 seconds
-      keepalive.interval(15);
-  
-      keepalive.onPing.subscribe(() => this.lastPing = new Date());
-  
-      this.reset();
+     
       
     });
   }    
 
   reset() {
     this.idle.watch();
+    console.log('the idle is started')
     this.idleState = 'Started.';
     this.timedOut = false;
   }

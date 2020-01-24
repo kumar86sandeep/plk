@@ -61,10 +61,15 @@ export class DataService {
             
     }
 
-    public gensorLightVideoRequest(eventObject): Observable<any> {       
+    public gensorLightVideoRequest(eventObject, serial): Observable<any> {     
+        
+    
+
+    
+
         console.log('eventObject',eventObject);
         return this.httpClient
-        .post(`${environment.PLKCONFIG.URL}cmd/video`, eventObject)
+        .post(`${environment.PLKCONFIG.URL}cmd/video?tenanatId=${environment.PLKCONFIG.TENANATID}&SecretToken=${environment.PLKCONFIG.SECRETTOKEN}&serialNumber=${serial}`, eventObject)
         .map((response: any) => {        
             return response;
         })         
