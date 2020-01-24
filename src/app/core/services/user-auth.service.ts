@@ -27,7 +27,7 @@ export class UserAuthService {
   login(postedData): Observable<any> {
     
     return this.httpClient
-      .post('/login', postedData, { observe: 'response' })
+      .post('/auth/login', postedData, { observe: 'response' })
       .map((response: any) => {        
         return response;
       })

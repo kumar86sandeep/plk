@@ -31,19 +31,30 @@ export class DeviceInfoLeftsideComponent implements OnInit {
   //deviceId:any;
   deviceAddress:string;
   logsDateSearchForm: FormGroup;
-  @Input() deviceId: string;
+  @Input() vehicle:any;
 
   constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private commonUtilsService:CommonUtilsService, private router: Router, private calendar: NgbCalendar, private formBuilder: FormBuilder, private ngZone: NgZone) { 
     this.logsDate = this.calendar.getToday();
   }
 
   ngOnInit() {
+    
+  }
+
+  ngOnChanges() {
     this.logsDateSearchForm = this.formBuilder.group({
       logSearchDate: [this.logsDate]     
     });
-    this.fetchDeviceLogs();
-    window.setInterval(() => this.fetchDeviceLogs(), 10000);
-  }
+    console.log('the vehicle is',this.vehicle)
+    if(this.vehicle){
+      this.fetchDeviceLogs();
+ 
+      window.setInterval(() => this.fetchDeviceLogs(), 10000);
+      this.fetchDeviceAddress(this.vehicle.deviceInfo)
+    }
+
+    // changes.prop contains the old and the new value...
+  } 
 
   onSelectDate(event: any): void {    
     this.logsDate = {
@@ -76,7 +87,7 @@ export class DeviceInfoLeftsideComponent implements OnInit {
   fetchDeviceLogs(){
     let searchLogObject = {
       date:this.logsDate,
-      serialNumber:this.deviceId
+      serialNumber:this.vehicle.deviceInfo.device_NO
     }
     //this.commonUtilsService.showPageLoader(); 
     this.dataService.listingDeviceLogs(searchLogObject).subscribe(response => {

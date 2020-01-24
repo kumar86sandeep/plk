@@ -55,7 +55,6 @@ export class DeviceListingComponent implements OnInit {
 
   private getVehicles(): void {
     this.vehicleService.getVehicles().subscribe(response => {
-      console.log('the vehicle is ', response)
       this.vehicles = response.vehicles;
       this.totalVehicles = response.totalRecords;
 

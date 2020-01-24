@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import Swal from 'sweetalert2'
 
-import { DataService, CommonUtilsService, TitleService } from '../../core/services/index'
+import { DataService, CommonUtilsService, TitleService, VehicleService } from '../../core/services/index'
 import { environment } from '../../../environments/environment'
 
 declare var $;
@@ -26,8 +26,8 @@ export class StillCutComponent implements OnInit {
     offset:1,
     deviceId:''
   }
-
-  constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService) {
+  vehicle:any;
+  constructor(private vehicleService:VehicleService, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService) {
     this.deviceId  =  this.activatedRoute.snapshot.params.deviceId
     this.paginate.deviceId = this.deviceId 
    }
@@ -35,6 +35,7 @@ export class StillCutComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle();
     this.fetchResults();
+    this.fetchVehicleDetails();
     
   }
 
@@ -50,6 +51,15 @@ export class StillCutComponent implements OnInit {
       this.paginate.offset = (this.paginate.offset)+1     
     }  
     this.fetchResults();
+ 
+  }
+
+  private fetchVehicleDetails():void{
+      this.vehicleService.getVehicle(this.deviceId).subscribe(response=>{
+       this.vehicle = response;
+      },error=>{
+
+      })
   }
 
   fetchResults(){

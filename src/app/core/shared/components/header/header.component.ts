@@ -28,11 +28,11 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
 
-    this.bnIdle.startWatching(5).subscribe((isTimedOut: boolean) => {
+    this.bnIdle.startWatching(600).subscribe((isTimedOut: boolean) => {
       console.log('isTimedOut',isTimedOut);
       if (isTimedOut && localStorage.getItem('x-auth-token')){
        // console.log('session expired');
-        this.logoutDueToInactive()
+        // this.logoutDueToInactive()
       }
     });
 

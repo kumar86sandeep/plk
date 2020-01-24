@@ -11,7 +11,7 @@
                       </div>
                       
                 </div>
-                <app-device-info-leftside  [deviceId]="deviceId"></app-device-info-leftside>
+                <app-device-info-leftside  [vehicle]="vehicle"></app-device-info-leftside>
              </div>
            </div>
 
@@ -28,11 +28,10 @@
       [streetViewControl]="true"
       >      
         <agm-marker 
-            *ngFor="let deviceMarker of deviceMarkers; let i = index"
-            
-            [latitude]="deviceMarker.latitude"
-            [longitude]="deviceMarker.longitude"
-            [iconUrl]="(deviceMarker.connectionStatus)?locatorIconActive:locatorIconInactive"
+            *ngFor="let vehicle of vehicles; let i = index"
+            [latitude]="vehicle?.deviceInfo?.latitude"
+            [longitude]="vehicle?.deviceInfo?.longitude"
+            [iconUrl]="(vehicle?.deviceInfo?.connectionStatus)?locatorIconActive:locatorIconInactive"
             (markerClick)="clickedMarker(infowindow)"
             >
             
@@ -40,12 +39,12 @@
             <div class="user-map-info-outer">
               
               <div class="user-map-info-content">
-                        <strong><a href="javascript:void(0)" (click)="clickedInfoWindow(deviceMarker)">{{deviceMarker.devices_NO}}</a></strong>
-                <p class="user-map-info-content-name">Paul</p>
+                        <strong><a href="javascript:void(0)" (click)="clickedInfoWindow(deviceMarker)">{{vehicle?.deviceInfo?.devices_NO}}</a></strong>
+                <p class="user-map-info-content-name">{{vehicle?.drivers[0]?.first_name ? vehicle?.drivers[0].first_name : ''}}</p>
               </div>
 
               <div class="user-map-info-pic">
-                <img src="assets/images/user-pic.jpg">
+                <img [src]="vehicle?.drivers[0]?.profile_pic ? vehicle?.drivers[0].profile_pic :'assets/images/user-pic.jpg'">
               </div>
 
             </div>

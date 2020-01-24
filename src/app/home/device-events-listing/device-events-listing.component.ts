@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 
-import { DataService, CommonUtilsService, TitleService } from '../../core/services/index'
+import { DataService, CommonUtilsService, TitleService, VehicleService } from '../../core/services/index'
 import { environment } from '../../../environments/environment'
 import Swal from 'sweetalert2'
 
@@ -26,18 +26,15 @@ export class DeviceEventsListingComponent implements OnInit {
   hasMorePages:boolean = false;
   eventsDateSearchForm: FormGroup;
   eventsDate: any;
-
+  vehicle:any
   paginate = {  
     limit: 10,   
     offset:1,
     deviceId:''
   }
-  constructor(private router: Router, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService, private calendar: NgbCalendar, private formBuilder: FormBuilder,) { 
+  constructor(private vehicleService:VehicleService, private router: Router, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService, private calendar: NgbCalendar, private formBuilder: FormBuilder,) { 
     this.deviceId = this.activatedRoute.snapshot.params.deviceId     
     this.eventsDate = this.calendar.getToday();
-  }
-
-  ngOnInit() { 
     this.titleService.setTitle();    
     this.paginate.deviceId = this.deviceId 
 
@@ -45,9 +42,25 @@ export class DeviceEventsListingComponent implements OnInit {
       eventsSearchDate: [this.eventsDate]     
     });
 
-    this.fetchResults()    
+    this.fetchResults()  ;
+    this.fetchVehicleDetails(); 
   }
 
+  ngOnInit() { 
+    
+  }
+  
+
+
+  private fetchVehicleDetails():void{
+    this.vehicleService.getVehicle(this.deviceId).subscribe(response=>{
+     this.vehicle = response;
+    },error=>{
+
+    })
+}
+
+  
   requestEvent(filename){   
     console.log('filename',filename);
     Swal.fire({
