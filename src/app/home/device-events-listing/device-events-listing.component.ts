@@ -26,6 +26,7 @@ export class DeviceEventsListingComponent implements OnInit {
   hasMorePages:boolean = false;
   eventsDateSearchForm: FormGroup;
   eventsDate: any;
+
   paginate = {  
     limit: 10,   
     offset:1,
@@ -44,7 +45,7 @@ export class DeviceEventsListingComponent implements OnInit {
       eventsSearchDate: [this.eventsDate]     
     });
 
-    this.fetchResults()
+    this.fetchResults()    
   }
 
   requestEvent(filename){   

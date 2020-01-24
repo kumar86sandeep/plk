@@ -73,10 +73,6 @@ export class DeviceInfoLeftsideComponent implements OnInit {
     });
   }
 
-  goBack(){
-    this.location.back();
-  }
-
   fetchDeviceLogs(){
     let searchLogObject = {
       date:this.logsDate,
@@ -98,7 +94,7 @@ export class DeviceInfoLeftsideComponent implements OnInit {
             //calculating ldwState count
             let ldwLeftStateLogs = response.filter((log) => (log.ldwState == 1)).map((log) => log);          
             //this.logsCount['ldwState'] = ldwLeftStateLogs.length;
-
+            
             let ldwRightStateLogs = response.filter((log) => (log.ldwState == 2)).map((log) => log);          
             this.logsCount['ldwLState'] = ldwLeftStateLogs.length;
             this.logsCount['ldwRState'] = ldwRightStateLogs.length; 

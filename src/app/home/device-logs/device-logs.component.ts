@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from "@angular/router";
 import {NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
-
+import { Location } from '@angular/common';
 import { DataService, CommonUtilsService, UserAuthService, TitleService } from '../../core/services/index'
 
 
@@ -13,7 +13,7 @@ import { DataService, CommonUtilsService, UserAuthService, TitleService } from '
   styleUrls: ['./device-logs.component.css']
 })
 export class DeviceLogsComponent implements OnInit { 
-   
+ 
   deviceMarkers:any = []
   deviceAddress:string;
   // google maps zoom level
@@ -26,7 +26,7 @@ export class DeviceLogsComponent implements OnInit {
   previousInfoWindow:any;
   deviceId: string;
 
-  constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private userAuthService:UserAuthService, private commonUtilsService:CommonUtilsService, private titleService:TitleService, private router: Router, private calendar: NgbCalendar, private formBuilder: FormBuilder, private ngZone: NgZone) { 
+  constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private userAuthService:UserAuthService, private commonUtilsService:CommonUtilsService, private titleService:TitleService, private router: Router, private calendar: NgbCalendar, private formBuilder: FormBuilder, private ngZone: NgZone, private location:Location) { 
     this.userAuthService.isLoggedIn(true);//trigger loggedin observable 
     if(!this.activatedRoute.snapshot.params.deviceId){
       this.router.navigate(['/home/listing'])
@@ -36,7 +36,8 @@ export class DeviceLogsComponent implements OnInit {
 
   async ngOnInit() {      
     this.titleService.setTitle();  
-    await this.fetchDevices()    
+    await this.fetchDevices()   
+
   }
   
   fetchDeviceAddress(marker){
@@ -101,6 +102,10 @@ export class DeviceLogsComponent implements OnInit {
       this.previousInfoWindow.close();
   }
   this.previousInfoWindow = infowindow;
+}
+
+goBack(){  
+  this.location.back();
 }
 
 

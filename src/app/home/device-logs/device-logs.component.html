@@ -1,7 +1,18 @@
 <div class="container-fluid">
         <div class="row">
            <div class="col-md-3">
-             <app-device-info-leftside [deviceId]="deviceId"></app-device-info-leftside>
+              <div class="left-second-box-outer"> 
+                  <div class="row">
+                      <div class="col-md-6">
+                        <button (click)="goBack()" class="btn-primary-back">
+                            <i class="fa fa-angle-left"></i>
+                            Back
+                        </button>
+                      </div>
+                      
+                </div>
+                <app-device-info-leftside  [deviceId]="deviceId"></app-device-info-leftside>
+             </div>
            </div>
 
            <div class="col-md-9 px-0">

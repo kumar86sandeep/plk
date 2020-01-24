@@ -15,7 +15,7 @@ declare var $;
 })
 export class StillCutComponent implements OnInit {
   @ViewChild("stillcutImagesSection",{static: false}) stillcutImagesSection: ElementRef;
-
+ 
   stillcutListing:any = []  
   deviceId:any;
   images:any = []
@@ -35,6 +35,7 @@ export class StillCutComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle();
     this.fetchResults();
+    
   }
 
   goBack(){
