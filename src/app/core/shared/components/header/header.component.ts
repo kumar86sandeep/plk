@@ -3,8 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { UserAuthService, CommonUtilsService } from '../../../services'
 import { environment } from 'src/environments/environment';
-import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
-import { Keepalive } from '@ng-idle/keepalive';
+import { BnNgIdleService } from 'bn-ng-idle';
 
 @Component({
   selector: 'app-header',
@@ -17,48 +16,27 @@ export class HeaderComponent implements OnInit {
   lastPing?: Date = null;
   isLoggedin:boolean = false;
   loggedinUserObject:any;
-  constructor(private userAuthService:UserAuthService, private router: Router, private commonUtilsService:CommonUtilsService, private idle: Idle, private keepalive: Keepalive) {
-    
-    idle.setTimeout(60);
-    idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
-    idle.onIdleEnd.subscribe(() => this.idleState = 'No longer idle.');
-    idle.onTimeout.subscribe(() => {
-      this.idleState = 'Timed out!';
-      if(localStorage.getItem('loggedinSellerUser') || localStorage.getItem('loggedinDealerUser') )
-      this.logout()
-      this.timedOut = true;
-    });
-    idle.onIdleStart.subscribe(() => {
-      this.idleState = 'You\'ve gone idle!'
-       console.log('You have gone idle')
-    });
-    idle.onTimeoutWarning.subscribe((countdown) => this.idleState = 'You will time out in ' + countdown + ' seconds!');
-
-    // sets the ping interval to 15 seconds
-    keepalive.interval(15);
-
-    keepalive.onPing.subscribe(() => this.lastPing = new Date());
-
-    this.reset();
+  constructor(private userAuthService:UserAuthService, private router: Router, private commonUtilsService:CommonUtilsService, private bnIdle: BnNgIdleService) {   
     
     this.userAuthService.checkLoggedinStatus().subscribe((loginStatus) => {
-      this.isLoggedin = loginStatus.isLoggedIn;   
-       
-      this.fetchUser();
-
-     
-      
+      this.isLoggedin = loginStatus.isLoggedIn;      
+      this.fetchUser();      
     });
   }    
 
-  reset() {
-    this.idle.watch();
-    console.log('the idle is started')
-    this.idleState = 'Started.';
-    this.timedOut = false;
-  }
+  
 
   ngOnInit() {
+
+    this.bnIdle.startWatching(5).subscribe((isTimedOut: boolean) => {
+      console.log('isTimedOut',isTimedOut);
+      if (isTimedOut && localStorage.getItem('x-auth-token')){
+       // console.log('session expired');
+        this.logoutDueToInactive()
+      }
+    });
+
+
     if (localStorage.getItem('x-auth-token')) {
       this.isLoggedin = true
       this.fetchUser()
@@ -71,7 +49,16 @@ export class HeaderComponent implements OnInit {
       console.log('loggedinUserObject',this.loggedinUserObject);
     });
   }
-
+  logoutDueToInactive(){
+    this.commonUtilsService.showPageLoader(environment.MESSAGES.LOGOUT_IN_PROCESS);     
+    localStorage.removeItem('x-auth-token');
+    localStorage.clear();
+    this.commonUtilsService.onError(environment.MESSAGES.INACTIVE_LOGOUT_SUCCESS);
+    this.userAuthService.isLoggedIn(false);
+    this.commonUtilsService.hidePageLoader(); 
+    this.router.navigate(['/login']);
+    return false;
+  }
   logout() {   
     this.commonUtilsService.showPageLoader(environment.MESSAGES.LOGOUT_IN_PROCESS);     
     localStorage.removeItem('x-auth-token');

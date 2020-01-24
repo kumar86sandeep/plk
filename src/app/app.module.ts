@@ -8,6 +8,7 @@ import { ToastrModule } from 'ng6-toastr-notifications';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
+import { BnNgIdleService } from 'bn-ng-idle'; // import bn-ng-idle service
 
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
@@ -68,6 +69,7 @@ export function provideConfig() {
     NgIdleKeepaliveModule.forRoot()
   ],
   providers: [
+    BnNgIdleService,
     DataService,
     CommonUtilsService,
     PageLoaderService,
@@ -90,7 +92,11 @@ export function provideConfig() {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor, multi: true
-    }
+    }/*,    
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ApiIntercepter, multi: true
+    }*/
   ],
   bootstrap: [AppComponent]
 })

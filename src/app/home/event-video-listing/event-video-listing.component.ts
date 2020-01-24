@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment'
   styleUrls: ['./event-video-listing.component.css']
 })
 export class EventVideoListingComponent implements OnInit {
-
+ 
   videoListing:any = []
   videoSrc:string='';
   listView:boolean = true
@@ -21,7 +21,7 @@ export class EventVideoListingComponent implements OnInit {
   constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService) { }
 
   ngOnInit() {
-    this.titleService.setTitle();
+    this.titleService.setTitle();  
     this.filekey = this.activatedRoute.snapshot.params.filekey;
     this.deviceId = this.activatedRoute.snapshot.params.deviceId;
     this.downloadUrl = `${environment.PLKCONFIG.URL}rec/${atob(this.filekey).replace("fmsvideo", "fmsvideoDownload")}`
