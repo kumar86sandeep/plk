@@ -71,6 +71,10 @@ export class DataService {
             
     }
 
+ // apis to get data from server
+    public getVehicles():Observable<any>{
+        return this.httpClient.get('vehicles');
+    }
     
 
 }

@@ -25,7 +25,7 @@ import { FormValidationErrorsComponent } from './core/shared/components/form-val
 import { PageLoaderService, AlertService } from './core/shared/_services'
 
 //services
-import { DataService, CommonUtilsService, UserAuthService, TitleService } from './core/services';
+import { DataService,VehicleService, CommonUtilsService, UserAuthService, TitleService } from './core/services';
 
 //importing intercepters
 import { ApiIntercepter } from './core/intercepters/api.intercepter';
@@ -72,7 +72,8 @@ export function provideConfig() {
     PageLoaderService,
     AlertService,
     UserAuthService,
-    TitleService,     
+    TitleService,  
+    VehicleService,   
     {
       provide: AuthServiceConfig,
       useFactory: provideConfig

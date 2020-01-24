@@ -1,7 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import PerfectScrollbar from 'perfect-scrollbar';
 
-import { DataService, CommonUtilsService, UserAuthService, TitleService } from '../../core/services'
+import { DataService, CommonUtilsService, UserAuthService, TitleService ,VehicleService} from '../../core/services'
 
 //shared services
 import { PageLoaderService } from '../../core/shared/_services'
@@ -33,7 +33,7 @@ export class DeviceListingComponent implements OnInit {
   originalDeviceListing:any = []
   previousInfoWindow:any;
 
-  constructor(private dataService:DataService, private ngZone: NgZone, private pageLoaderService: PageLoaderService, private commonUtilsService:CommonUtilsService, private userAuthService:UserAuthService, private titleService:TitleService) {	
+  constructor(private vehicleService:VehicleService, private dataService:DataService, private ngZone: NgZone, private pageLoaderService: PageLoaderService, private commonUtilsService:CommonUtilsService, private userAuthService:UserAuthService, private titleService:TitleService) {	
 	
   }
 
@@ -46,6 +46,11 @@ export class DeviceListingComponent implements OnInit {
 		this.commonUtilsService.hidePageLoader();
     }, error => {
 		this.commonUtilsService.onError(error);
+    });
+    this.vehicleService.getVehicles().subscribe(response=>{
+        console.log('the vehicle is ',response)
+    },error=>{
+
     })
   }
 
