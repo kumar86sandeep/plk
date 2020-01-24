@@ -1,7 +1,7 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, Renderer } from '@angular/core';
 import PerfectScrollbar from 'perfect-scrollbar';
 
-import { DataService, CommonUtilsService, UserAuthService, TitleService ,VehicleService} from '../../core/services'
+import { DataService, CommonUtilsService, UserAuthService, TitleService, VehicleService } from '../../core/services'
 
 //shared services
 import { PageLoaderService } from '../../core/shared/_services'
@@ -17,79 +17,102 @@ import { PageLoaderService } from '../../core/shared/_services'
 
 export class DeviceListingComponent implements OnInit {
 
-  
+
 
 
   // google maps zoom level
   zoom: number = 10;
-  
+  selectedIndex:number = 0;
   // initial center position for the map
   lat: number = 33.859337;
   lng: number = -117.91992;
-  locatorIconActive:string = "/assets/images/icon-blue.png"
-  locatorIconInactive:string = "/assets/images/icon-red.png"
-  deviceListing:any = []
-  deviceMarkers:any = []
-  originalDeviceListing:any = []
-  previousInfoWindow:any;
+  locatorIconActive: string = "/assets/images/icon-blue.png"
+  locatorIconInactive: string = "/assets/images/icon-red.png"
+  deviceListing: any = []
+  deviceMarkers: any = []
+  originalDeviceListing: any = [];
+  originalVehicleListing: any = []
+  previousInfoWindow: any;
+  vehicles: any;
+  totalVehicles: number = 0;
+  constructor(private render:Renderer,private vehicleService: VehicleService, private dataService: DataService, private ngZone: NgZone, private pageLoaderService: PageLoaderService, private commonUtilsService: CommonUtilsService, private userAuthService: UserAuthService, private titleService: TitleService) {
 
-  constructor(private vehicleService:VehicleService, private dataService:DataService, private ngZone: NgZone, private pageLoaderService: PageLoaderService, private commonUtilsService:CommonUtilsService, private userAuthService:UserAuthService, private titleService:TitleService) {	
-	
   }
 
   ngOnInit() {
-	this.titleService.setTitle();
-	this.commonUtilsService.showPageLoader();
+    this.titleService.setTitle();
+    this.commonUtilsService.showPageLoader();
     this.dataService.listingDevices().subscribe(response => {
-		this.deviceMarkers = this.deviceListing = response
-		this.originalDeviceListing = response
-		this.commonUtilsService.hidePageLoader();
+      this.deviceMarkers = this.deviceListing = response
+      this.originalDeviceListing = response
+      this.getVehicles()
+      this.commonUtilsService.hidePageLoader();
     }, error => {
-		this.commonUtilsService.onError(error);
+      this.commonUtilsService.onError(error);
     });
-    this.vehicleService.getVehicles().subscribe(response=>{
-        console.log('the vehicle is ',response)
-    },error=>{
+
+  }
+
+  private getVehicles(): void {
+    this.vehicleService.getVehicles().subscribe(response => {
+      console.log('the vehicle is ', response)
+      this.vehicles = response.vehicles;
+      this.totalVehicles = response.totalRecords;
+
+      this.vehicles.forEach((vehilce) => {
+        this.deviceMarkers.forEach(device => {
+          if (device.devices_NO == vehilce.device_id) {
+            vehilce['deviceInfo'] = device;
+
+          }
+
+        });
+
+      });
+      this.originalVehicleListing = this.vehicles;
+
+    }, error => {
 
     })
   }
 
- 
-  filterVehicles(event){
-	this.deviceMarkers = this.deviceListing = this.originalDeviceListing
-	let eventValue = event.target.value
-	let data =  this.deviceListing.filter(o =>
-		Object.keys(o).some(k => o['devices_NO'].toLowerCase().includes(eventValue.toLowerCase())));
-		this.ngZone.run( () => {
-			this.deviceListing = data
-			this.deviceMarkers = data
-			console.log('data',data);
-			return this.deviceListing;
-		 });
-		
+
+  //this is for search vehicle from db
+  filterVehicles(event) {
+    // this.deviceMarkers = this.deviceListing = this.originalDeviceListing
+   if(event.target.value){
+    let eventValue = event.target.value
+
+
+    //filter vehicle array on front end
+    var newArray = this.vehicles.filter( (vehicle)=> {
+      return (vehicle.vehicle_no.includes(event.target.value) || vehicle.vehicle_year.includes(event.target.value) || vehicle.vehicle_modal.includes(event.target.value) || vehicle.vehicle_vin.includes(event.target.value))
+    });
+    this.vehicles = newArray;
+
+   
+  
+   }else{
+    this.vehicles = this.originalVehicleListing
+   }
+   
+
   }
 
 
   /*
  	Active class on click of device 
   */
- activateClass(device,i){
-	//this.zoom = 10
-	this.originalDeviceListing.map(function(x) { 
-		x.isOpen = false; 
-		x.active = false; 
-		return x
-	});
+  activateClass(vehicle, i) {
+    this.selectedIndex = i;
+    
+  }
 
-	device.active = !device.active; 
-	device.isOpen = true
- }
-
- clickedMarker(infowindow) {
+  clickedMarker(infowindow) {
     if (this.previousInfoWindow) {
-        this.previousInfoWindow.close();
+      this.previousInfoWindow.close();
     }
     this.previousInfoWindow = infowindow;
- }
+  }
 
 }

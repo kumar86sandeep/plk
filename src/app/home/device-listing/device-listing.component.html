@@ -3,7 +3,7 @@
      <div class="col-md-3 px-0">
       <div class="left-chat-bg">
         <div> 
-         <h5 class="vehicle-search-heading">Vehicles List ({{deviceListing.length}})</h5>
+         <h5 class="vehicle-search-heading">Vehicles List ({{totalVehicles}})</h5>
           
          <div class="position-relative">
          <i class="fa fa-search"></i>
@@ -34,14 +34,14 @@
 
         <div id="custscroll">
         <perfect-scrollbar style="max-width: 400px; max-height: 560px;">
-            <ul *ngIf="deviceListing.length>0" class="chat-box">
-                <li *ngFor="let device of deviceListing;let i = index" (click)="activateClass(device,i)" [ngClass]="{'active': device.active}">
+            <ul *ngIf="vehicles?.length>0" class="chat-box">
+                <li *ngFor="let vehicle of vehicles;let i = index" id="vehicle_{{i}}"  (click)="activateClass(vehicle,i)" [ngClass]="{'active': i==selectedIndex}">
                     <div class="user-image">
-                    <img src="assets/images/user-pic.jpg">
+                    <img [src]="vehicle?.drivers[0]?.profile_pic ? vehicle?.drivers[0]?.profile_pic : 'assets/images/user-pic.jpg'">
                     </div>
                     <div class="user-details">
-                         <a routerLink="/home/device-logs/{{device?.devices_NO}}">{{device?.devices_NO}}</a>
-                         <span>paul</span>
+                         <a routerLink="/home/device-logs/{{vehicle?.deviceInfo?.devices_NO}}">{{vehicle?.device_id}}</a>
+                         <span>{{vehicle?.drivers[0]?.first_name}}</span>
                     </div>
                 </li>
                 
@@ -71,20 +71,20 @@
         [streetViewControl]="true"
         >      
         <agm-marker 
-            *ngFor="let deviceMarker of deviceMarkers; let i = index"
+            *ngFor="let vechicle of vehicles; let i = index"
             
-            [latitude]="deviceMarker.latitude"
-            [longitude]="deviceMarker.longitude"
-            [iconUrl]="(deviceMarker.connectionStatus)?locatorIconActive:locatorIconInactive"
+            [latitude]="vechicle?.deviceInfo?.latitude"
+            [longitude]="vechicle?.deviceInfo?.longitude"
+            [iconUrl]="(vechicle?.deviceInfo?.connectionStatus)?locatorIconActive:locatorIconInactive"
             (markerClick)="clickedMarker(infowindow)"
             >
             
-          <agm-info-window [isOpen]="deviceMarker.isOpen" #infowindow>
+          <agm-info-window [isOpen]="vechicle?.deviceInfo?.isOpen" #infowindow>
             <div class="user-map-info-outer">
               
               <div class="user-map-info-content">
-                <strong><a routerLink="/home/device-logs/{{deviceMarker?.devices_NO}}">{{deviceMarker.devices_NO}}</a></strong>
-                <p class="user-map-info-content-name">Paul</p>
+                <strong><a routerLink="/home/device-logs/{{vechicle?.deviceInfo?.devices_NO}}">{{vechicle?.deviceInfo?.devices_NO}}</a></strong>
+                <p class="user-map-info-content-name">vechicle?.drivers[0]?.first_name</p>
               </div>
 
               <div class="user-map-info-pic">
