@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 
-import { DataService, CommonUtilsService, TitleService } from '../../core/services/index'
+import { DataService, CommonUtilsService, TitleService, VehicleService } from '../../core/services/index'
 import { environment } from '../../../environments/environment'
 import Swal from 'sweetalert2'
 
@@ -26,28 +26,43 @@ export class DeviceEventsListingComponent implements OnInit {
   hasMorePages:boolean = false;
   eventsDateSearchForm: FormGroup;
   eventsDate: any;
-
+  vehicle:any
   paginate = {  
     limit: 10,   
     offset:1,
     deviceId:''
   }
-  constructor(private router: Router, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService, private calendar: NgbCalendar, private formBuilder: FormBuilder,) { 
+  deviceAddress:string;
+  // google maps zoom level
+  zoom: number = 10;
+  vehicles:any; //fromdb
+  totalVehicles:any;
+  deviceMarkers:any; //from cloud server
+  lat:any;
+  lng:any;
+  constructor(private vehicleService:VehicleService, private router: Router, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService, private calendar: NgbCalendar, private formBuilder: FormBuilder,) { 
     this.deviceId = this.activatedRoute.snapshot.params.deviceId     
     this.eventsDate = this.calendar.getToday();
-  }
-
-  ngOnInit() { 
     this.titleService.setTitle();    
     this.paginate.deviceId = this.deviceId 
 
     this.eventsDateSearchForm = this.formBuilder.group({
       eventsSearchDate: [this.eventsDate]     
     });
-
-    this.fetchResults()    
+     this.fetchDevices()
+    this.fetchResults()  ;
   }
 
+  ngOnInit() { 
+    
+  }
+  
+
+
+
+
+
+  
   requestEvent(filename){   
     console.log('filename',filename);
     Swal.fire({
@@ -147,6 +162,85 @@ export class DeviceEventsListingComponent implements OnInit {
     fileKey = fileKey.replace("fmsvideo", "fmsvideoDownload");
     return `${environment.PLKCONFIG.URL}rec/${fileKey}`
   }
+  fetchDevices(){
+    this.commonUtilsService.showPageLoader(); 
+   
+    this.dataService.listingDevices().subscribe(response => {     
+    this.deviceMarkers = response        
+    this.getVehicles();
+    this.commonUtilsService.hidePageLoader();     
+  }, error => {
+    this.commonUtilsService.onError(error);
+  })
+}
 
+
+
+/*
+fetch all vehicles from the db
+*/
+
+
+private getVehicles(): void {
+  this.vehicleService.getVehicles().subscribe(response => {
+    this.vehicles = response.vehicles;
+    this.totalVehicles = response.totalRecords;
+
+    this.vehicles.forEach((vehilce) => {
+      this.deviceMarkers.forEach(device => {
+        if (device.devices_NO == vehilce.device_id) {
+          vehilce['deviceInfo'] = device;
+
+        }
+
+      });
+
+    });
+    // this.originalVehicleListing = this.vehicles;
+
+    const index  = this.vehicles.map(e => e.deviceInfo.devices_NO).indexOf(this.deviceId); 
+
+    if(index == -1){
+      this.commonUtilsService.onError('Sorry!! Could not found device.');
+      this.router.navigate(['/home/listing'])
+      return;
+    }
+    this.vehicle = this.vehicles[index];
+    console.log('the vehicle after filter is',this.vehicle)
+    this.vehicles[index]['isOpen'] = true   
+    this.lat = (this.vehicles[index]['deviceInfo']['latitude']==0)?this.lat:this.vehicles[index]['deviceInfo']['latitude']
+    this.lng = (this.vehicles[index]['deviceInfo']['longitude']==0)?this.lng:this.vehicles[index]['deviceInfo']['longitude']
+    this.fetchDeviceAddress(this.vehicles[index]['deviceInfo']);
+
+
+
+
+
+
+  }, error => {
+
+  })
+}
+fetchDeviceAddress(marker){
+  console.log('marker',marker)
+  let geoCoder = new google.maps.Geocoder;
+  geoCoder.geocode({ 'location': { lat: marker.latitude, lng: marker.longitude } }, (results, status) => {
+   
+    if (status === 'OK') {
+      if (results[0]) {
+        this.zoom = 12;
+        this.deviceAddress = results[0].formatted_address;
+       // this.commonUtilsService.onSuccess("Your dealerhsip plan has been cancelled successfully.")
+      } else {
+        //window.alert('No results found');
+        this.commonUtilsService.onError('Could not find the address.');
+      }
+    } else {
+    //  window.alert('Geocoder failed due to: ' + status);
+      this.commonUtilsService.onError('Geocoder failed due to: ' + status);
+    }
+
+  });
+}
 
 }

@@ -26,12 +26,13 @@ import { FormValidationErrorsComponent } from './core/shared/components/form-val
 import { PageLoaderService, AlertService } from './core/shared/_services'
 
 //services
-import { DataService, CommonUtilsService, UserAuthService, TitleService } from './core/services';
+import { DataService,VehicleService, CommonUtilsService, UserAuthService, TitleService } from './core/services';
 
 //importing intercepters
 import { ApiIntercepter } from './core/intercepters/api.intercepter';
 import { TokenInterceptor } from './core/intercepters/token.interceptor';
 import { HttpErrorInterceptor } from './core/intercepters/http-error.interceptor';
+
 
  
 
@@ -74,7 +75,8 @@ export function provideConfig() {
     PageLoaderService,
     AlertService,
     UserAuthService,
-    TitleService,     
+    TitleService,  
+    VehicleService,   
     {
       provide: AuthServiceConfig,
       useFactory: provideConfig
@@ -85,12 +87,12 @@ export function provideConfig() {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: HttpErrorInterceptor, multi: true
-    }/*,    
+      useClass: ApiIntercepter, multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: ApiIntercepter, multi: true
-    }*/
+      useClass: HttpErrorInterceptor, multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

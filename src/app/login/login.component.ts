@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
         },
         error => {
           //showing error toaster message
-         // console.log('no');
+          console.log('error',error);
           this.commonUtilsService.onError(error);
         });
   }

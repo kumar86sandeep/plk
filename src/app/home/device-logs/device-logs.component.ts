@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { Router, ActivatedRoute } from "@angular/router";
 import {NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import { Location } from '@angular/common';
-import { DataService, CommonUtilsService, UserAuthService, TitleService } from '../../core/services/index'
+import { DataService, CommonUtilsService, UserAuthService, TitleService, VehicleService } from '../../core/services/index'
 
 
 
@@ -25,18 +25,21 @@ export class DeviceLogsComponent implements OnInit {
   locatorIconInactive:string = "/assets/images/icon-red.png"
   previousInfoWindow:any;
   deviceId: string;
-
-  constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private userAuthService:UserAuthService, private commonUtilsService:CommonUtilsService, private titleService:TitleService, private router: Router, private calendar: NgbCalendar, private formBuilder: FormBuilder, private ngZone: NgZone, private location:Location) { 
+  vehicle:any;
+  totalVehicles:number = 0;
+  vehicles:any;
+  constructor(private vehicleService:VehicleService, private dataService:DataService, private activatedRoute: ActivatedRoute, private userAuthService:UserAuthService, private commonUtilsService:CommonUtilsService, private titleService:TitleService, private router: Router, private calendar: NgbCalendar, private formBuilder: FormBuilder, private ngZone: NgZone, private location:Location) { 
     this.userAuthService.isLoggedIn(true);//trigger loggedin observable 
     if(!this.activatedRoute.snapshot.params.deviceId){
       this.router.navigate(['/home/listing'])
     }
-    this.deviceId = this.activatedRoute.snapshot.params.deviceId     
+    this.deviceId = this.activatedRoute.snapshot.params.deviceId   
+    this.titleService.setTitle();  
+     this.fetchDevices()     
   }
 
   async ngOnInit() {      
-    this.titleService.setTitle();  
-    await this.fetchDevices()   
+    
 
   }
   
@@ -70,23 +73,61 @@ export class DeviceLogsComponent implements OnInit {
      
       this.dataService.listingDevices().subscribe(response => {     
       this.deviceMarkers = response        
-      const index  = this.deviceMarkers.map(e => e.devices_NO).indexOf(this.deviceId); 
+      this.getVehicles();
+      this.commonUtilsService.hidePageLoader();     
+    }, error => {
+      this.commonUtilsService.onError(error);
+    })
+  }
+
+
+
+/*
+fetch all vehicles from the db
+*/
+
+
+private getVehicles(): void {
+    this.vehicleService.getVehicles().subscribe(response => {
+      this.vehicles = response.vehicles;
+      this.totalVehicles = response.totalRecords;
+
+      this.vehicles.forEach((vehilce) => {
+        this.deviceMarkers.forEach(device => {
+          if (device.devices_NO == vehilce.device_id) {
+            vehilce['deviceInfo'] = device;
+
+          }
+
+        });
+
+      });
+      // this.originalVehicleListing = this.vehicles;
+
+      const index  = this.vehicles.map(e => e.deviceInfo.devices_NO).indexOf(this.deviceId); 
   
       if(index == -1){
         this.commonUtilsService.onError('Sorry!! Could not found device.');
         this.router.navigate(['/home/listing'])
         return;
       }
-      this.deviceMarkers[index]['isOpen'] = true   
-      console.log('deviceMarkers',this.deviceMarkers);  
-      this.lat = (this.deviceMarkers[index]['latitude']==0)?this.lat:this.deviceMarkers[index]['latitude']
-      this.lng = (this.deviceMarkers[index]['longitude']==0)?this.lng:this.deviceMarkers[index]['longitude']
-      this.fetchDeviceAddress(this.deviceMarkers[index]);
-      this.commonUtilsService.hidePageLoader();     
+      this.vehicle = this.vehicles[index];
+      console.log('the vehicle after filter is',this.vehicle)
+      this.vehicles[index]['isOpen'] = true   
+      this.lat = (this.vehicles[index]['deviceInfo']['latitude']==0)?this.lat:this.vehicles[index]['deviceInfo']['latitude']
+      this.lng = (this.vehicles[index]['deviceInfo']['longitude']==0)?this.lng:this.vehicles[index]['deviceInfo']['longitude']
+      this.fetchDeviceAddress(this.vehicles[index]['deviceInfo']);
+
+
+
+
+
+
     }, error => {
-      this.commonUtilsService.onError(error);
+
     })
   }
+
 
   clickedInfoWindow(marker) { 
     this.deviceId = marker.devices_NO   

@@ -25,9 +25,8 @@ export class UserAuthService {
 
   
   login(postedData): Observable<any> {
-    
     return this.httpClient
-      .post('http://52.52.35.177:3000/api/auth/login', postedData, { observe: 'response' })
+      .post('auth/login', postedData, { observe: 'response' })
       .map((response: any) => {        
         return response;
       })
@@ -37,7 +36,7 @@ export class UserAuthService {
   saveUser(socialLoginData): Observable<any> {
     
     return this.httpClient
-      .post('http://52.52.35.177:3000/api/auth/addUser', socialLoginData, { observe: 'response' })
+      .post('addUser', socialLoginData, { observe: 'response' })
       .map((response: any) => {        
         return response;
       })
@@ -47,7 +46,7 @@ export class UserAuthService {
   fetchUser(): Observable<any> {
     let authToken = localStorage.getItem('x-auth-token')
     return this.httpClient
-      .post('http://52.52.35.177:3000/api/auth/fetchUser', {authToken})
+      .post('auth/fetchUser', {authToken})
       .map((response: any) => {        
         return response;
       })

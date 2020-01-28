@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 
-import { DataService, TitleService } from '../../core/services/index'
+import { DataService, TitleService, VehicleService } from '../../core/services/index'
 import { environment } from '../../../environments/environment'
 
 @Component({
@@ -18,7 +18,8 @@ export class EventVideoListingComponent implements OnInit {
   deviceId:string;
   filekey:string;
   downloadUrl:any;
-  constructor(private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService) { }
+  vehicle:any
+  constructor(private vehicleService:VehicleService, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService) { }
 
   ngOnInit() {
     this.titleService.setTitle();  
@@ -33,10 +34,18 @@ export class EventVideoListingComponent implements OnInit {
           console.log('videoSrc',this.videoSrc);
     }, error => {
       
-    })
+    });
+    this.fetchVehicleDetails()
+    
     
   }
+  private fetchVehicleDetails():void{
+    this.vehicleService.getVehicle(this.deviceId).subscribe(response=>{
+     this.vehicle = response;
+    },error=>{
 
+    })
+}
   putVideoSource(source){
     this.videoSrc = source
   }
