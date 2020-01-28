@@ -4,6 +4,7 @@ import { NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 import { DataService, CommonUtilsService } from '../../core/services/index'
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
+declare var $: any;
 
 @Component({
   selector: 'app-device-info-leftside',
@@ -42,7 +43,7 @@ export class DeviceInfoLeftsideComponent implements OnInit {
       logSearchDate: [this.logsDate]     
     });
     this.fetchDeviceLogs();
-    window.setInterval(() => this.fetchDeviceLogs(), 10000);
+    window.setInterval(() => this.fetchDeviceLogs(), 5000);
   }
 
   onSelectDate(event: any): void {    
@@ -91,14 +92,50 @@ export class DeviceInfoLeftsideComponent implements OnInit {
         if(response != null && response.length>0){
           
           this.ngZone.run( () => {
+            
+            var ldwL=0, ldwR=0, sda=0, vcw=0, vb=0, fcda=0, pd=0;
+            var alertStatus = "";
+            var order = 0;
+            $(response.reverse()).each(function (i, item) { 
+              if(order+1 != i){
+	    					alertStatus="";
+              }
+              
+              if((item.ldwState & 1) == 1 && alertStatus != "ldwL"){
+	    					
+                ldwL++;
+	    					alertStatus = "ldwL";
+	    					order = i;
+              }
+              if((item.ldwState & 2) == 2 && alertStatus != "ldwR"){
+	    					
+	    					ldwR++;
+	    					alertStatus = "ldwR";
+	    					order = i;
+              }
+              if((item.vdState & 2) == 2 && alertStatus != "sda"){  
+	    					sda++;
+	    					alertStatus = "sda";
+                order = i;
+              }
+              if((item.vdState & 16) == 16 && alertStatus != "vcw"){               
+	    					
+	    					vcw++;
+	    					alertStatus = "vcw";
+                order = i;
+              }
+            }) 
+
+            
             //calculating ldwState count
             let ldwLeftStateLogs = response.filter((log) => (log.ldwState == 1)).map((log) => log);          
             //this.logsCount['ldwState'] = ldwLeftStateLogs.length;
             
             let ldwRightStateLogs = response.filter((log) => (log.ldwState == 2)).map((log) => log);          
-            this.logsCount['ldwLState'] = ldwLeftStateLogs.length;
-            this.logsCount['ldwRState'] = ldwRightStateLogs.length; 
-
+            this.logsCount['ldwLState'] = ldwL;
+            this.logsCount['ldwRState'] = ldwR; 
+            this.logsCount['sdaState'] = sda;
+            this.logsCount['vcwState'] = vcw; 
            });
 
                   

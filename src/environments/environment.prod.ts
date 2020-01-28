@@ -14,6 +14,7 @@ export const environment = {
     LOGOUT_SUCCESS:'Successfully logged out.',
     FETCHING_RECORDS:'Fetching Records....',
     ERROR_TEXT_LOADER:'Sorry!! We could not fetch records.',
-    FETCHING_IMAGES:'Fetching Images'
+    FETCHING_IMAGES:'Fetching Images',
+    INACTIVE_LOGOUT_SUCCESS:'Session has been timed out due to inactivity. Please login again.'
   }
 };
