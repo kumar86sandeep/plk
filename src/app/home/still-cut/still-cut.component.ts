@@ -26,16 +26,25 @@ export class StillCutComponent implements OnInit {
     offset:1,
     deviceId:''
   }
+  deviceAddress:string;
+  // google maps zoom level
+  zoom: number = 10;
+  vehicles:any; //fromdb
   vehicle:any;
+  totalVehicles:any;
+  deviceMarkers:any; //from cloud server
+  lat:any;
+  lng:any;
   constructor(private vehicleService:VehicleService, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService) {
     this.deviceId  =  this.activatedRoute.snapshot.params.deviceId
-    this.paginate.deviceId = this.deviceId 
+    this.paginate.deviceId = this.deviceId ;
+    this.fetchDevices();
    }
 
   ngOnInit() {
     this.titleService.setTitle();
     this.fetchResults();
-    this.fetchVehicleDetails();
+    // this.fetchVehicleDetails();
     
   }
 
@@ -54,13 +63,13 @@ export class StillCutComponent implements OnInit {
  
   }
 
-  private fetchVehicleDetails():void{
-      this.vehicleService.getVehicle(this.deviceId).subscribe(response=>{
-       this.vehicle = response;
-      },error=>{
+  // private fetchVehicleDetails():void{
+  //     this.vehicleService.getVehicle(this.deviceId).subscribe(response=>{
+  //      this.vehicle = response;
+  //     },error=>{
 
-      })
-  }
+  //     })
+  // }
 
   fetchResults(){
     
@@ -122,6 +131,87 @@ export class StillCutComponent implements OnInit {
     // To protect you, we'll throw an error if it doesn't exist.
   }
 
+
+
+  fetchDevices(){
+    this.commonUtilsService.showPageLoader(); 
    
+    this.dataService.listingDevices().subscribe(response => {     
+    this.deviceMarkers = response        
+    this.getVehicles();
+    this.commonUtilsService.hidePageLoader();     
+  }, error => {
+    this.commonUtilsService.onError(error);
+  })
+}
+
+
+
+/*
+fetch all vehicles from the db
+*/
+
+
+private getVehicles(): void {
+  this.vehicleService.getVehicles().subscribe(response => {
+    this.vehicles = response.vehicles;
+    this.totalVehicles = response.totalRecords;
+
+    this.vehicles.forEach((vehilce) => {
+      this.deviceMarkers.forEach(device => {
+        if (device.devices_NO == vehilce.device_id) {
+          vehilce['deviceInfo'] = device;
+
+        }
+
+      });
+
+    });
+    // this.originalVehicleListing = this.vehicles;
+
+    const index  = this.vehicles.map(e => e.deviceInfo.devices_NO).indexOf(this.deviceId); 
+
+    if(index == -1){
+      this.commonUtilsService.onError('Sorry!! Could not found device.');
+      // this.router.navigate(['/home/listing'])
+      return;
+    }
+    this.vehicle = this.vehicles[index];
+    console.log('the vehicle after filter is',this.vehicle)
+    this.vehicles[index]['isOpen'] = true   
+    this.lat = (this.vehicles[index]['deviceInfo']['latitude']==0)?this.lat:this.vehicles[index]['deviceInfo']['latitude']
+    this.lng = (this.vehicles[index]['deviceInfo']['longitude']==0)?this.lng:this.vehicles[index]['deviceInfo']['longitude']
+    this.fetchDeviceAddress(this.vehicles[index]['deviceInfo']);
+
+
+
+
+
+
+  }, error => {
+
+  })
+}
+fetchDeviceAddress(marker){
+  console.log('marker',marker)
+  let geoCoder = new google.maps.Geocoder;
+  geoCoder.geocode({ 'location': { lat: marker.latitude, lng: marker.longitude } }, (results, status) => {
+   
+    if (status === 'OK') {
+      if (results[0]) {
+        this.zoom = 12;
+        this.deviceAddress = results[0].formatted_address;
+       // this.commonUtilsService.onSuccess("Your dealerhsip plan has been cancelled successfully.")
+      } else {
+        //window.alert('No results found');
+        this.commonUtilsService.onError('Could not find the address.');
+      }
+    } else {
+    //  window.alert('Geocoder failed due to: ' + status);
+      this.commonUtilsService.onError('Geocoder failed due to: ' + status);
+    }
+
+  });
+}
 
 }
