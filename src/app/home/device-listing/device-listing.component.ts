@@ -36,6 +36,7 @@ export class DeviceListingComponent implements OnInit {
   previousInfoWindow: any;
   vehicles: any;
   totalVehicles: number = 0;
+  company_id:any;
   constructor(private render:Renderer,private vehicleService: VehicleService, private dataService: DataService, private ngZone: NgZone, private pageLoaderService: PageLoaderService, private commonUtilsService: CommonUtilsService, private userAuthService: UserAuthService, private titleService: TitleService,private router:Router) {
 
   }
@@ -43,6 +44,8 @@ export class DeviceListingComponent implements OnInit {
   ngOnInit() {
     this.titleService.setTitle();
     this.commonUtilsService.showPageLoader();
+    let company = JSON.parse(localStorage.getItem('user'));
+    this.company_id = company._id;
     this.dataService.listingDevices().subscribe(response => {
       this.deviceMarkers = this.deviceListing = response
       this.originalDeviceListing = response
@@ -55,7 +58,7 @@ export class DeviceListingComponent implements OnInit {
   }
 
   private getVehicles(): void {
-    this.vehicleService.getVehicles().subscribe(response => {
+    this.vehicleService.getVehicles(this.company_id).subscribe(response => {
       this.vehicles = response.vehicles;
       this.totalVehicles = response.totalRecords;
 

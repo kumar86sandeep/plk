@@ -28,6 +28,7 @@ export class DeviceLogsComponent implements OnInit {
   vehicle:any;
   totalVehicles:number = 0;
   vehicles:any;
+  company_id:any;
   constructor(private vehicleService:VehicleService, private dataService:DataService, private activatedRoute: ActivatedRoute, private userAuthService:UserAuthService, private commonUtilsService:CommonUtilsService, private titleService:TitleService, private router: Router, private calendar: NgbCalendar, private formBuilder: FormBuilder, private ngZone: NgZone, private location:Location) { 
     this.userAuthService.isLoggedIn(true);//trigger loggedin observable 
     if(!this.activatedRoute.snapshot.params.deviceId){
@@ -35,6 +36,8 @@ export class DeviceLogsComponent implements OnInit {
     }
     this.deviceId = this.activatedRoute.snapshot.params.deviceId   
     this.titleService.setTitle();  
+    let company = JSON.parse(localStorage.getItem('user'));
+    this.company_id = company._id;
      this.fetchDevices()     
   }
 
@@ -88,7 +91,7 @@ fetch all vehicles from the db
 
 
 private getVehicles(): void {
-    this.vehicleService.getVehicles().subscribe(response => {
+    this.vehicleService.getVehicles(this.company_id).subscribe(response => {
       this.vehicles = response.vehicles;
       this.totalVehicles = response.totalRecords;
 

@@ -40,6 +40,7 @@ export class DeviceEventsListingComponent implements OnInit {
   deviceMarkers:any; //from cloud server
   lat:any;
   lng:any;
+  company_id:any;
   constructor(private vehicleService:VehicleService, private router: Router, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService, private calendar: NgbCalendar, private formBuilder: FormBuilder,) { 
     this.deviceId = this.activatedRoute.snapshot.params.deviceId     
     this.eventsDate = this.calendar.getToday();
@@ -49,6 +50,8 @@ export class DeviceEventsListingComponent implements OnInit {
     this.eventsDateSearchForm = this.formBuilder.group({
       eventsSearchDate: [this.eventsDate]     
     });
+    let company = JSON.parse(localStorage.getItem('user'));
+    this.company_id = company._id;
      this.fetchDevices()
     this.fetchResults()  ;
   }
@@ -182,7 +185,7 @@ fetch all vehicles from the db
 
 
 private getVehicles(): void {
-  this.vehicleService.getVehicles().subscribe(response => {
+  this.vehicleService.getVehicles(this.company_id).subscribe(response => {
     this.vehicles = response.vehicles;
     this.totalVehicles = response.totalRecords;
 
