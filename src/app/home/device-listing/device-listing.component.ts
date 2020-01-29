@@ -64,7 +64,7 @@ export class DeviceListingComponent implements OnInit {
 
       this.vehicles.forEach((vehilce) => {
         this.deviceMarkers.forEach(device => {
-          console.log('the aids are',device.devices_NO)
+         // console.log('the aids are',device.devices_NO)
           if (device.devices_NO == vehilce.device_id) {
            
             vehilce['deviceInfo'] = device;
@@ -75,7 +75,7 @@ export class DeviceListingComponent implements OnInit {
 
       });
       this.originalVehicleListing = this.vehicles;
-      console.log('the listng is',this.vehicles)
+     // console.log('the listng is',this.vehicles)
     }, error => {
 
     })

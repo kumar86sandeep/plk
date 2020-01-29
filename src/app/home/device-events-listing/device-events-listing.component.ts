@@ -112,13 +112,7 @@ export class DeviceEventsListingComponent implements OnInit {
   }
 
  
-  eventVideos(obj){
-    console.log(obj);
-    if(obj.encodedFiles== null){
-      alert('no attached files');
-      return false;
-    }
-   let filekey = btoa(obj.filekey)
+  eventVideos(filekey){
     filekey = btoa(filekey)
     this.router.navigate(['/home/event-videos/'+filekey+'/'+this.deviceId])
   }
@@ -133,6 +127,17 @@ export class DeviceEventsListingComponent implements OnInit {
     this.fetchResults();
   }*/
 
+  /*checkEventHasVideo(){   
+    this.dataService.listingEventVideos(atob(this.filekey)).subscribe(response => {
+      this.videoListing = response
+      console.log(this.videoListing);
+      if(this.videoListing.length>0)
+          this.videoSrc = this.videoListing[0]
+          console.log('videoSrc',this.videoSrc);
+    }, error => {
+      
+    });
+  }*/
   fetchResults(){
     this.commonUtilsService.showPageLoader(environment.MESSAGES.FETCHING_RECORDS); 
     this.dataService.listingDeviceEvents({deviceId:this.deviceId, eventsDate: this.eventsDate }).subscribe(response => {

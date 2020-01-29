@@ -94,7 +94,7 @@ export class StillCutComponent implements OnInit {
         console.log('response',response);
         this.images = response
         this.commonUtilsService.hidePageLoader();  
-        $(this.stillcutImagesSection.nativeElement).modal({backdrop: 'static', keyboard: false, show: true});
+        $(this.stillcutImagesSection.nativeElement).modal({backdrop: 'static', keyboard: false, hide: true});
          
            
       }, error => {
@@ -120,16 +120,29 @@ export class StillCutComponent implements OnInit {
         
         this.commonUtilsService.showPageLoader('Processing...'); 
           this.dataService.gensorLightVideoRequest(formData, this.deviceId).subscribe(response => {
-            
             this.commonUtilsService.hidePageLoader(); 
-            Swal.fire(
-              'Done!',
-              'Your request has been processed. The light event video should momentarily available in Dash Cam Event Page.',
-              'success'
-            )
+            if(response.error){
+              Swal.fire(
+                'Error!',
+                'We already have received a request for the same stillcut.',
+                'error'
+              )
+              $(this.stillcutImagesSection.nativeElement).modal({hide: true});
+            }else{
+              Swal.fire(
+                'Done!',
+                'Your request has been processed. The video should momentarily available in Dash Cam Event Page.',
+                'success'
+              )
+              $(this.stillcutImagesSection.nativeElement).modal({hide: true});
+            }
+            
+            
+            
             //this.commonUtilsService.onSuccess("Your request has been sent successfully.")
           }, error => {
             this.commonUtilsService.onError(error);
+            
           })
       }
     })
