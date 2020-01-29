@@ -33,10 +33,14 @@ export class StillCutComponent implements OnInit {
   vehicle:any;
   totalVehicles:any;
   deviceMarkers:any; //from cloud server
-
+  lat:any;
+  lng:any;
+  company_id:any;
   constructor(private vehicleService:VehicleService, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService) {
     this.deviceId  =  this.activatedRoute.snapshot.params.deviceId
     this.paginate.deviceId = this.deviceId ;
+    let company = JSON.parse(localStorage.getItem('user'));
+    this.company_id = company._id;
     this.fetchDevices();
    }
 
@@ -164,7 +168,7 @@ fetch all vehicles from the db
 
 
 private getVehicles(): void {
-  this.vehicleService.getVehicles().subscribe(response => {
+  this.vehicleService.getVehicles(this.company_id).subscribe(response => {
     this.vehicles = response.vehicles;
     this.totalVehicles = response.totalRecords;
 
