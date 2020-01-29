@@ -54,8 +54,9 @@ export class LoginComponent implements OnInit {
         (response) => { 
           localStorage.setItem("x-auth-token", response.headers.get('x-auth-token'));       
           this.commonUtilsService.hidePageLoader(); 
+          localStorage.setItem('user',JSON.stringify(response.body))
           this.userAuthService.isLoggedIn(true);//trigger loggedin observable 
-          this.router.navigate(['/home/listing'])
+          this.router.navigate(['/home/listing']);
         },
         error => {
           //showing error toaster message

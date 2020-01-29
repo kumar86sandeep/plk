@@ -94,10 +94,15 @@ private getVehicles(): void {
 
       this.vehicles.forEach((vehilce) => {
         this.deviceMarkers.forEach(device => {
-          if (device.devices_NO == vehilce.device_id) {
+          // console.log('the vehicle',device.devices_NO ,'and device is is',vehilce.device_id)
+          if(device.devices_NO){
+            console.log('the vehicle',device.devices_NO ,'and device is is',vehilce.device_id)
+          if (device.devices_NO.toString() == vehilce.device_id) {
+            console.log('the vehicsssle',device.devices_NO)
             vehilce['deviceInfo'] = device;
 
           }
+        }
 
         });
 

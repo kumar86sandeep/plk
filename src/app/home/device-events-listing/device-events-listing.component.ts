@@ -197,7 +197,7 @@ private getVehicles(): void {
 
     });
     // this.originalVehicleListing = this.vehicles;
-
+ 
     const index  = this.vehicles.map(e => e.deviceInfo.devices_NO).indexOf(this.deviceId); 
 
     if(index == -1){

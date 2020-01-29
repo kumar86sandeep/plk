@@ -5,6 +5,7 @@ import { DataService, CommonUtilsService, UserAuthService, TitleService, Vehicle
 
 //shared services
 import { PageLoaderService } from '../../core/shared/_services'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-device-listing',
@@ -35,7 +36,7 @@ export class DeviceListingComponent implements OnInit {
   previousInfoWindow: any;
   vehicles: any;
   totalVehicles: number = 0;
-  constructor(private render:Renderer,private vehicleService: VehicleService, private dataService: DataService, private ngZone: NgZone, private pageLoaderService: PageLoaderService, private commonUtilsService: CommonUtilsService, private userAuthService: UserAuthService, private titleService: TitleService) {
+  constructor(private render:Renderer,private vehicleService: VehicleService, private dataService: DataService, private ngZone: NgZone, private pageLoaderService: PageLoaderService, private commonUtilsService: CommonUtilsService, private userAuthService: UserAuthService, private titleService: TitleService,private router:Router) {
 
   }
 
@@ -60,7 +61,9 @@ export class DeviceListingComponent implements OnInit {
 
       this.vehicles.forEach((vehilce) => {
         this.deviceMarkers.forEach(device => {
+          console.log('the aids are',device.devices_NO)
           if (device.devices_NO == vehilce.device_id) {
+           
             vehilce['deviceInfo'] = device;
 
           }
@@ -69,7 +72,7 @@ export class DeviceListingComponent implements OnInit {
 
       });
       this.originalVehicleListing = this.vehicles;
-
+      console.log('the listng is',this.vehicles)
     }, error => {
 
     })
@@ -112,6 +115,20 @@ export class DeviceListingComponent implements OnInit {
       this.previousInfoWindow.close();
     }
     this.previousInfoWindow = infowindow;
+  }
+
+
+
+  public redirectToDeviceLogs(vehicle:any):void{
+    console.log('the device is is',vehicle.deviceInfo)
+    if(vehicle.deviceInfo){
+   
+     this.router.navigate(['/home/device-logs/'+vehicle.deviceInfo.devices_NO])
+    }else{
+      this.commonUtilsService.onError('Oops! device not found.')
+    }
+    
+
   }
 
 }
