@@ -34,7 +34,7 @@ export class DeviceListingComponent implements OnInit {
   originalDeviceListing: any = [];
   originalVehicleListing: any = []
   previousInfoWindow: any;
-  vehicles: any;
+  vehicles:any= [];
   totalVehicles: number = 0;
   constructor(private render:Renderer,private vehicleService: VehicleService, private dataService: DataService, private ngZone: NgZone, private pageLoaderService: PageLoaderService, private commonUtilsService: CommonUtilsService, private userAuthService: UserAuthService, private titleService: TitleService,private router:Router) {
 
@@ -117,10 +117,8 @@ export class DeviceListingComponent implements OnInit {
     this.previousInfoWindow = infowindow;
   }
 
-
-
   public redirectToDeviceLogs(vehicle:any):void{
-    console.log('the device is is',vehicle.deviceInfo)
+    //console.log('the device is is',vehicle.deviceInfo)
     if(vehicle.deviceInfo){
    
      this.router.navigate(['/home/device-logs/'+vehicle.deviceInfo.devices_NO])
