@@ -44,10 +44,11 @@ export class HeaderComponent implements OnInit {
   }
 
   fetchUser(){
-    this.userAuthService.fetchUser().subscribe((response) => {        
-      this.loggedinUserObject =   response
-      console.log('loggedinUserObject',this.loggedinUserObject);
-    });
+    // this.userAuthService.fetchUser().subscribe((response) => {        
+    //   this.loggedinUserObject =   response
+    //   console.log('loggedinUserObject',this.loggedinUserObject);
+    // });
+    this.loggedinUserObject = JSON.parse(localStorage.getItem('user'))
   }
   logoutDueToInactive(){
     this.commonUtilsService.showPageLoader(environment.MESSAGES.LOGOUT_IN_PROCESS);     

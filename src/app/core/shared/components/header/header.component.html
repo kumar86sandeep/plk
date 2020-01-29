@@ -18,11 +18,11 @@
       <div class="nav-item_end ml-auto">
         <div class="user-profile-menubar">
           <span class="profile-username">
-            {{loggedinUserObject?.firstName}}
+            {{loggedinUserObject?.name}}
           </span>
           <div class="profile-pic">
-            <img *ngIf="!loggedinUserObject?.photoUrl" src="assets/images/user-pic.jpg">
-            <img *ngIf="loggedinUserObject?.photoUrl" src="{{loggedinUserObject?.photoUrl}}">
+            <img *ngIf="!loggedinUserObject?.logo_url" src="assets/images/user-pic.jpg">
+            <img *ngIf="loggedinUserObject?.logo_url" src="{{loggedinUserObject?.logo_url}}">
           </div>
           <span class="dropdown-menu-show">
             <img src="assets/images/arrow-down.png">
