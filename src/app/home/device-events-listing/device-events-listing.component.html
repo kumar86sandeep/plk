@@ -61,10 +61,10 @@
                                           <td>{{formatEventDatetime(event.eventTime)}}</td>
                                           <td *ngIf="event.eventType!='DCA_EVENT_TYPE_GSensor_Light'">{{mapEvent(event.eventType)}}</td>
                                           <td *ngIf="event.eventType=='DCA_EVENT_TYPE_GSensor_Light'"><span style="cursor: pointer;" (click)="requestEvent(event.fileName)">{{mapEvent(event.eventType)}}</span></td>                                     
-                                          <td><a href="javascript:void(0)" (click)="eventVideos(event.fileKey)"><i class="fa  fa-play-circle"></i></a></td>
+                                          <td><a href="javascript:void(0)" (click)="eventVideos(event)"><i class="fa  fa-play-circle"></i></a></td>
                                           <td><a href="{{downloadVideo(event.fileKey)}}" download><i class="fa fa-download"></i></a></td>
                                       
-                                    </tr>                               
+                                      </tr>                          
                                 </tbody>
 
                                 <tbody *ngIf="eventListing.length<=0">

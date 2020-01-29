@@ -39,7 +39,7 @@
             <div class="user-map-info-outer">
               
               <div class="user-map-info-content">
-                        <strong><a href="javascript:void(0)" (click)="clickedInfoWindow(deviceMarker)">{{vehicle?.deviceInfo?.devices_NO}}</a></strong>
+                        <strong><a href="javascript:void(0)" (click)="clickedInfoWindow(vehicle.deviceInfo)">{{vehicle?.deviceInfo?.devices_NO}}</a></strong>
                 <p class="user-map-info-content-name">{{vehicle?.drivers[0]?.first_name ? vehicle?.drivers[0].first_name : ''}}</p>
               </div>
 

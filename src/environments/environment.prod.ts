@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   PAGESIZE:20,
   APP_NAME:'PLK',
-  DB_CONNECTION_URL:'52.52.35.177:3000',
+  DB_CONNECTION_URL:'http://52.52.35.177:3000/api/',
   PLKCONFIG:{
     URL:'http://fmsweb.aimatics.net/',
     TENANATID:'259e3ff0-11b4-11ea-8d71-362b9e155667',

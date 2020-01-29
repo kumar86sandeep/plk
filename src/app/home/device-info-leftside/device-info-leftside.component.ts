@@ -79,7 +79,7 @@ export class DeviceInfoLeftsideComponent implements OnInit {
   fetchDeviceLogs(){
     let searchLogObject = {
       date:this.logsDate,
-      serialNumber:this.vehicle.deviceInfo.device_NO
+      serialNumber:this.vehicle.device_id
     }
     //this.commonUtilsService.showPageLoader(); 
     this.dataService.listingDeviceLogs(searchLogObject).subscribe(response => {

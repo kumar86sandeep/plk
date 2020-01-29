@@ -109,7 +109,13 @@ export class DeviceEventsListingComponent implements OnInit {
   }
 
  
-  eventVideos(filekey){
+  eventVideos(obj){
+    console.log(obj);
+    if(obj.encodedFiles== null){
+      alert('no attached files');
+      return false;
+    }
+   let filekey = btoa(obj.filekey)
     filekey = btoa(filekey)
     this.router.navigate(['/home/event-videos/'+filekey+'/'+this.deviceId])
   }
@@ -197,7 +203,7 @@ private getVehicles(): void {
 
     });
     // this.originalVehicleListing = this.vehicles;
-
+ 
     const index  = this.vehicles.map(e => e.deviceInfo.devices_NO).indexOf(this.deviceId); 
 
     if(index == -1){

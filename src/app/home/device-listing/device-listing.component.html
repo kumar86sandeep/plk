@@ -40,7 +40,7 @@
                     <img [src]="vehicle?.drivers[0]?.profile_pic ? vehicle?.drivers[0]?.profile_pic : 'assets/images/user-pic.jpg'">
                     </div>
                     <div class="user-details">
-                         <a routerLink="/home/device-logs/{{vehicle?.deviceInfo?.devices_NO}}">{{vehicle?.device_id}}</a>
+                         <a (click)="redirectToDeviceLogs(vehicle)" >{{vehicle?.device_id}}</a>
                          <span>{{vehicle?.drivers[0]?.first_name}}</span>
                     </div>
                 </li>
