@@ -23,15 +23,34 @@ export class LoginComponent implements OnInit {
     if (localStorage.getItem("x-auth-token")) {
       // logged in so return true
       this.router.navigate(['/home/listing'])
-    }  
-       
+    } 
+
+    console.log(this.calcTime('Chandigarh',new Date().getTimezoneOffset()));
   }
+
+  calcTime(city, offset) {
+    console.log('offset',offset);
+    // create Date object for current location
+    var d = new Date();
+
+    // convert to msec
+    // add local time zone offset
+    // get UTC time in msec
+    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+    // create new Date object for different city
+    // using supplied offset
+    var nd = new Date(utc + (3600000*offset));
+
+    // return time as a string
+    return "The local time in " + city + " is " + nd.toLocaleString();
+}
 
   ngOnInit() {
     /*this.socialAuthService.authState.subscribe((user) => {
       this.addUser(user);   
     });*/
-
+    
     this.titleService.setTitle();
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.email, Validators.required]],

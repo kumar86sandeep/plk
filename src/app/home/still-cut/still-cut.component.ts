@@ -16,7 +16,8 @@ declare var $;
 export class StillCutComponent implements OnInit {
   @ViewChild("stillcutImagesSection",{static: false}) stillcutImagesSection: ElementRef;
  
-  stillcutListing:any = []  
+  stillcutListing:any = [] 
+  currentVideo:any; 
   deviceId:any;
   images:any = []
   stillObj:any = {}
@@ -26,15 +27,13 @@ export class StillCutComponent implements OnInit {
     offset:1,
     deviceId:''
   }
-  deviceAddress:string;
-  // google maps zoom level
-  zoom: number = 10;
+  
+ 
   vehicles:any; //fromdb
   vehicle:any;
   totalVehicles:any;
   deviceMarkers:any; //from cloud server
-  lat:any;
-  lng:any;
+
   constructor(private vehicleService:VehicleService, private dataService:DataService, private activatedRoute: ActivatedRoute, private location:Location, private titleService:TitleService, private commonUtilsService:CommonUtilsService) {
     this.deviceId  =  this.activatedRoute.snapshot.params.deviceId
     this.paginate.deviceId = this.deviceId ;
@@ -63,14 +62,6 @@ export class StillCutComponent implements OnInit {
  
   }
 
-  // private fetchVehicleDetails():void{
-  //     this.vehicleService.getVehicle(this.deviceId).subscribe(response=>{
-  //      this.vehicle = response;
-  //     },error=>{
-
-  //     })
-  // }
-
   fetchResults(){
     
     this.commonUtilsService.showPageLoader(environment.MESSAGES.FETCHING_RECORDS); 
@@ -91,6 +82,8 @@ export class StillCutComponent implements OnInit {
   }
 
    stillcutImage(stillObj){
+     console.log(stillObj);
+     this.currentVideo = stillObj.currentVideo
     this.commonUtilsService.showPageLoader(environment.MESSAGES.FETCHING_IMAGES); 
       this.stillObj = stillObj
       this.dataService.stillcutImage(stillObj).subscribe(response => {        
@@ -105,7 +98,7 @@ export class StillCutComponent implements OnInit {
       })
    }
 
-   requestEvent(){   
+   requestEvent(filename){   
 
     Swal.fire({
       title: 'Are you sure to request this?',
@@ -115,7 +108,25 @@ export class StillCutComponent implements OnInit {
       cancelButtonText: 'No'
     }).then((result) => {
       if (result.value) {
+        var formData: any = new FormData();
         
+       
+        formData.append("parameter", `"{currentVideo:${filename}}"`);
+
+        
+        this.commonUtilsService.showPageLoader('Processing...'); 
+          this.dataService.gensorLightVideoRequest(formData, this.deviceId).subscribe(response => {
+            
+            this.commonUtilsService.hidePageLoader(); 
+            Swal.fire(
+              'Done!',
+              'Your request has been processed. The light event video should momentarily available in Dash Cam Event Page.',
+              'success'
+            )
+            //this.commonUtilsService.onSuccess("Your request has been sent successfully.")
+          }, error => {
+            this.commonUtilsService.onError(error);
+          })
       }
     })
    }
@@ -177,41 +188,10 @@ private getVehicles(): void {
       return;
     }
     this.vehicle = this.vehicles[index];
-    console.log('the vehicle after filter is',this.vehicle)
-    this.vehicles[index]['isOpen'] = true   
-    this.lat = (this.vehicles[index]['deviceInfo']['latitude']==0)?this.lat:this.vehicles[index]['deviceInfo']['latitude']
-    this.lng = (this.vehicles[index]['deviceInfo']['longitude']==0)?this.lng:this.vehicles[index]['deviceInfo']['longitude']
-    this.fetchDeviceAddress(this.vehicles[index]['deviceInfo']);
-
-
-
-
-
-
+    this.vehicles[index]['isOpen'] = true 
   }, error => {
 
   })
-}
-fetchDeviceAddress(marker){
-  console.log('marker',marker)
-  let geoCoder = new google.maps.Geocoder;
-  geoCoder.geocode({ 'location': { lat: marker.latitude, lng: marker.longitude } }, (results, status) => {
-   
-    if (status === 'OK') {
-      if (results[0]) {
-        this.zoom = 12;
-        this.deviceAddress = results[0].formatted_address;
-       // this.commonUtilsService.onSuccess("Your dealerhsip plan has been cancelled successfully.")
-      } else {
-        //window.alert('No results found');
-        this.commonUtilsService.onError('Could not find the address.');
-      }
-    } else {
-    //  window.alert('Geocoder failed due to: ' + status);
-      this.commonUtilsService.onError('Geocoder failed due to: ' + status);
-    }
-
-  });
 }
 
 }

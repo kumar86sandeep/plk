@@ -13,21 +13,12 @@ declare var $: any;
 })
 export class DeviceInfoLeftsideComponent implements OnInit {
   intervalId:any;
-  logsCount:any={
-    ldState: 0,
-    ldwState:0,
-    vdState: 0,
-    pdState: 0,
-    tsrState: 0,
-    tsrWarning: 0,
-    event: 0,
-    dsmState: 0,
-    dsmWarning: 0,
-    tasWarning: 0,
-    rearPDState: 0,
-    lat: 0,
-    lng: 0
-  };
+  logsCount:any = {
+    ldwLState:0,
+    ldwRState:0,
+    sdaState:0,
+    vcwState:0
+  }
   logsDate: any;
   //deviceId:any;
   deviceAddress:string;
@@ -95,8 +86,8 @@ export class DeviceInfoLeftsideComponent implements OnInit {
         this.logsCount = {
           ldwLState:0,
           ldwRState:0,
-          vdState:0,
-          pdState:0
+          sdaState:0,
+          vcwState:0
 
         }
         console.log(response);
