@@ -16,7 +16,7 @@ export class UserAuthService {
   constructor(private httpClient: HttpClient) { }
 
   isLoggedIn(value: boolean) {
-    
+    console.log('isloddein',value);
     this.loggedIn.next({ isLoggedIn: value });
   }
   checkLoggedinStatus(): Observable<any> {

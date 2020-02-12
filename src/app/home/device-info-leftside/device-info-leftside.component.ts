@@ -40,8 +40,10 @@ export class DeviceInfoLeftsideComponent implements OnInit {
     console.log('the vehicle is',this.vehicle)
     if(this.vehicle){
       this.fetchDeviceLogs();
- 
-      window.setInterval(() => this.fetchDeviceLogs(), 10000);
+      if(localStorage.getItem('x-auth-token')){
+        window.setInterval(() => this.fetchDeviceLogs(), 10000);
+      }
+      
       this.fetchDeviceAddress(this.vehicle.deviceInfo)
     }
 

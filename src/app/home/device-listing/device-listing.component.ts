@@ -13,13 +13,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./device-listing.component.css']
 })
 
-
-
-
 export class DeviceListingComponent implements OnInit {
 
-
-
+  
 
   // google maps zoom level
   zoom: number = 10;
@@ -66,7 +62,7 @@ export class DeviceListingComponent implements OnInit {
         this.deviceMarkers.forEach(device => {
          // console.log('the aids are',device.devices_NO)
           if (device.devices_NO == vehilce.device_id) {
-           
+            
             vehilce['deviceInfo'] = device;
 
           }
@@ -74,6 +70,7 @@ export class DeviceListingComponent implements OnInit {
         });
 
       });
+      console.log('vehicles',this.vehicles);
       this.originalVehicleListing = this.vehicles;
      // console.log('the listng is',this.vehicles)
     }, error => {
@@ -91,12 +88,10 @@ export class DeviceListingComponent implements OnInit {
 
     //filter vehicle array on front end
     var newArray = this.vehicles.filter( (vehicle)=> {
-      return (vehicle.vehicle_no.includes(event.target.value) || vehicle.vehicle_year.includes(event.target.value) || vehicle.vehicle_modal.includes(event.target.value) || vehicle.vehicle_vin.includes(event.target.value))
+      //console.log('vehicle',vehicle);
+      return (vehicle.device_id.includes(event.target.value) || vehicle.vehicle_no.includes(event.target.value) || vehicle.vehicle_year.includes(event.target.value) || vehicle.vehicle_modal.includes(event.target.value) || vehicle.vehicle_vin.includes(event.target.value))
     });
-    this.vehicles = newArray;
-
-   
-  
+    this.vehicles = newArray;  
    }else{
     this.vehicles = this.originalVehicleListing
    }

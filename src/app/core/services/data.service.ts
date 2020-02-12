@@ -61,15 +61,22 @@ export class DataService {
             
     }
 
-    public gensorLightVideoRequest(eventObject, serial): Observable<any> {     
-        
-    
-
-    
+    public gensorLightVideoRequest(eventObject, serial): Observable<any> { 
 
         console.log('eventObject',eventObject);
         return this.httpClient
         .post(`${environment.PLKCONFIG.URL}cmd/video?tenanatId=${environment.PLKCONFIG.TENANATID}&SecretToken=${environment.PLKCONFIG.SECRETTOKEN}&serialNumber=${serial}`, eventObject)
+        .map((response: any) => {        
+            return response;
+        })         
+            
+    }
+
+    public stillcutImagesRequest(stillcutObject, serial): Observable<any> { 
+
+        console.log('stillcutObject',stillcutObject);
+        return this.httpClient
+        .post(`${environment.PLKCONFIG.URL}cmd/jpg?tenanatId=${environment.PLKCONFIG.TENANATID}&SecretToken=${environment.PLKCONFIG.SECRETTOKEN}&serialNumber=${serial}`, stillcutObject)
         .map((response: any) => {        
             return response;
         })         

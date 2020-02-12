@@ -1,7 +1,13 @@
+
 <nav *ngIf="isLoggedin" class="navbar navbar-expand-lg navbar-dark static-top">
   <div class="container">
     <a class="navbar-brand" href="#">
-          Logo
+          <span *ngIf="companyLogo.length<=0">Logo</span>
+          <div *ngIf="companyLogo.length>0" class="top_logo">              
+              <img [src]="companyLogo">
+          </div>
+
+         
       </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -18,12 +24,12 @@
       <div class="nav-item_end ml-auto">
         <div class="user-profile-menubar">
           <span class="profile-username">
-            {{loggedinUserObject?.firstName}}
+            {{loggedinUserObject?.name}}
           </span>
-          <div class="profile-pic">
-            <img *ngIf="!loggedinUserObject?.photoUrl" src="assets/images/user-pic.jpg">
-            <img *ngIf="loggedinUserObject?.photoUrl" src="{{loggedinUserObject?.photoUrl}}">
-          </div>
+          <!--<div class="profile-pic">
+            <img *ngIf="!loggedinUserObject?.logo_url" src="assets/images/user-pic.jpg">
+            <img *ngIf="loggedinUserObject?.logo_url" src="{{loggedinUserObject?.logo_url}}">
+          </div>-->
           <span class="dropdown-menu-show">
             <img src="assets/images/arrow-down.png">
             <div class="dropdown-area-profile">

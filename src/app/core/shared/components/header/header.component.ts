@@ -13,14 +13,19 @@ import { BnNgIdleService } from 'bn-ng-idle';
 export class HeaderComponent implements OnInit {
   idleState = 'Not started.';
   timedOut = false;
+  companyLogo:any;
   lastPing?: Date = null;
   isLoggedin:boolean = false;
   loggedinUserObject:any;
   constructor(private userAuthService:UserAuthService, private router: Router, private commonUtilsService:CommonUtilsService, private bnIdle: BnNgIdleService) {   
     
     this.userAuthService.checkLoggedinStatus().subscribe((loginStatus) => {
-      this.isLoggedin = loginStatus.isLoggedIn;      
-      this.fetchUser();      
+     console.log('loginStatus',loginStatus);
+      this.isLoggedin = loginStatus.isLoggedIn;   
+      this.loggedinUserObject = JSON.parse(localStorage.getItem('user'))  
+      console.log('loggedinUserObject',this.loggedinUserObject);
+      this.companyLogo = (this.loggedinUserObject)?this.loggedinUserObject.logo_url:'';
+      //this.fetchUser();      
     });
   }    
 
@@ -39,15 +44,21 @@ export class HeaderComponent implements OnInit {
 
     if (localStorage.getItem('x-auth-token')) {
       this.isLoggedin = true
-      this.fetchUser()
+      //this.fetchUser()
+      this.loggedinUserObject = JSON.parse(localStorage.getItem('user'))  
+      this.companyLogo = this.loggedinUserObject.logo_url;
     }
   }
 
   fetchUser(){
-    this.userAuthService.fetchUser().subscribe((response) => {        
-      this.loggedinUserObject =   response
-      console.log('loggedinUserObject',this.loggedinUserObject);
-    });
+   /*this.userAuthService.fetchUser().subscribe((response) => {        
+       this.loggedinUserObject =   response
+       
+     });*/
+    this.loggedinUserObject = JSON.parse(localStorage.getItem('user'))
+    console.log('loggedinUserObject',this.loggedinUserObject);
+    this.companyLogo = this.loggedinUserObject.logo_url;
+    //console.log('companyLogo',this.companyLogo);
   }
   logoutDueToInactive(){
     this.commonUtilsService.showPageLoader(environment.MESSAGES.LOGOUT_IN_PROCESS);     

@@ -62,7 +62,8 @@
                                           <td *ngIf="event.eventType!='DCA_EVENT_TYPE_GSensor_Light'">{{mapEvent(event.eventType)}}</td>
                                           <td *ngIf="event.eventType=='DCA_EVENT_TYPE_GSensor_Light'"><span style="cursor: pointer;" (click)="requestEvent(event.fileName)">{{mapEvent(event.eventType)}}</span></td>                                     
                                           <td><a href="javascript:void(0)" (click)="eventVideos(event.fileKey)"><i class="fa  fa-play-circle"></i></a></td>
-                                          <td><a href="{{downloadVideo(event.fileKey)}}" download><i class="fa fa-download"></i></a></td>
+
+                                          <td><a href="javascript:void(0)" (click)="downloadVideo(event.eventType,event.fileKey)"><i class="fa fa-download"></i></a></td>
                                       
                                       </tr>                          
                                 </tbody>

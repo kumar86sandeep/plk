@@ -35,7 +35,7 @@ export class PageLoaderService {
   }
 
   pageLoader(value: boolean) {
-    console.log('value:' + value);
+  //  console.log('value:' + value);
     this.pageLoaderStatus.next(value)
   }
 

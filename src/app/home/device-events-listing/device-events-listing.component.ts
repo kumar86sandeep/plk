@@ -112,9 +112,20 @@ export class DeviceEventsListingComponent implements OnInit {
   }
 
  
+  
   eventVideos(filekey){
-    filekey = btoa(filekey)
-    this.router.navigate(['/home/event-videos/'+filekey+'/'+this.deviceId])
+    this.dataService.listingEventVideos(filekey).subscribe(response => {
+      filekey = btoa(filekey)
+      if(response.length>0){
+        this.router.navigate(['/home/event-videos/'+filekey+'/'+this.deviceId])
+      }else{
+        this.commonUtilsService.onError('No attached ideos with this event');        
+      }
+        
+    }, error => {
+        this.commonUtilsService.onError(error);
+    });
+    
   }
 
   /*applyPagination(type){   
@@ -172,17 +183,36 @@ export class DeviceEventsListingComponent implements OnInit {
     return `${eventDatetimeString.substring(0,4)}-${eventDatetimeString.substring(4,6)}-${eventDatetimeString.substring(6,8)} ${eventDatetimeString.substring(8,10)}:${eventDatetimeString.substring(10,12)}:${eventDatetimeString.substring(12,14)}`
   }
 
-  downloadVideo(fileKey){
-    fileKey = fileKey.replace("fmsvideo", "fmsvideoDownload");
-    return `${environment.PLKCONFIG.URL}rec/${fileKey}`
+  downloadVideo(eventType, fileKey){
+    if(eventType=='DCA_EVENT_TYPE_GSensor_Light'){
+      this.dataService.listingEventVideos(fileKey).subscribe(response => {
+        fileKey = btoa(fileKey)
+        if(response.length>0){
+          fileKey = fileKey.replace("fmsvideo", "fmsvideoDownload");
+          window.location.href =  `${environment.PLKCONFIG.URL}rec/${fileKey}`
+         // this.router.navigate(['/home/event-videos/'+filekey+'/'+this.deviceId])
+        }else{
+          Swal.fire(
+            'Warning!',
+            'No video available. If you want the video, click on “Gsensor Light”.',
+            'error'
+          )       
+        }
+          
+      }, error => {
+          this.commonUtilsService.onError(error);
+      });
+    }
+    
+    
   }
   fetchDevices(){
-    this.commonUtilsService.showPageLoader(); 
+    //this.commonUtilsService.showPageLoader(); 
    
     this.dataService.listingDevices().subscribe(response => {     
     this.deviceMarkers = response        
     this.getVehicles();
-    this.commonUtilsService.hidePageLoader();     
+    //this.commonUtilsService.hidePageLoader();     
   }, error => {
     this.commonUtilsService.onError(error);
   })

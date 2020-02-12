@@ -71,10 +71,12 @@ export class LoginComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(
         (response) => { 
-          localStorage.setItem("x-auth-token", response.headers.get('x-auth-token'));       
-          this.commonUtilsService.hidePageLoader(); 
           localStorage.setItem('user',JSON.stringify(response.body))
           this.userAuthService.isLoggedIn(true);//trigger loggedin observable 
+          localStorage.setItem("x-auth-token", response.headers.get('x-auth-token'));       
+          this.commonUtilsService.hidePageLoader(); 
+          
+          
           this.router.navigate(['/home/listing']);
         },
         error => {

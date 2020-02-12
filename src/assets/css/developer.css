@@ -122,6 +122,9 @@ li.nav-item.active a {
 .navbar.navbar-dark {
     background-color: #0e76a8;
     padding: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: 15vh;
 }
 .overview-text {
     font-size: 20px;
@@ -265,7 +268,7 @@ ul.chat-box {
     text-decoration: none;
 }
 .min-100vh {
-    min-height: 100vh;
+    height: calc( 100vh - 15vh );
 }
 
 /*second left section starts*/
@@ -284,7 +287,7 @@ ul.chat-box {
     padding-right: 5px;
 }
 .left-second-box-outer {
-    padding: 20px 0px;
+    padding: 20px 10px 20px 0px;
 }
 .btn-primary-view {
     color: #0e76a8;
@@ -890,3 +893,6 @@ video.video-layer-plk {
 .swal2-title{
     font-size: 15px!important;
 }
+
+.top_logo {max-width:150px; max-height:65px;overflow:hidden;    }
+.top_logo img{max-width:100%; max-height:100%;}

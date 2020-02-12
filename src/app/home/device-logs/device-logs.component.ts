@@ -47,7 +47,7 @@ export class DeviceLogsComponent implements OnInit {
   }
   
   fetchDeviceAddress(marker){
-    console.log('marker',marker)
+    // console.log('marker',marker)
     let geoCoder = new google.maps.Geocoder;
     geoCoder.geocode({ 'location': { lat: marker.latitude, lng: marker.longitude } }, (results, status) => {
      
@@ -99,9 +99,9 @@ private getVehicles(): void {
         this.deviceMarkers.forEach(device => {
           // console.log('the vehicle',device.devices_NO ,'and device is is',vehilce.device_id)
           if(device.devices_NO){
-           // console.log('the vehicle',device.devices_NO ,'and device is is',vehilce.device_id)
+            // console.log('the vehicle',device.devices_NO ,'and device is is',vehilce.device_id)
           if (device.devices_NO.toString() == vehilce.device_id) {
-            //console.log('the vehicsssle',device.devices_NO)
+            // console.log('the vehicsssle',device.devices_NO)
             vehilce['deviceInfo'] = device;
 
           }
@@ -139,11 +139,21 @@ private getVehicles(): void {
 
   clickedInfoWindow(marker) { 
     this.deviceId = marker.devices_NO   
-    const index  = this.deviceMarkers.map(e => e.devices_NO).indexOf(marker.devices_NO); 
-    this.deviceMarkers[index]['isOpen'] = true 
+   // const index  = this.deviceMarkers.map(e => e.devices_NO).indexOf(marker.devices_NO); 
+    const index  = this.vehicles.map(e => e.deviceInfo.devices_NO).indexOf(this.deviceId); 
+  
+    this.vehicle = this.vehicles[index];
+     // console.log('the vehicle after filter is',this.vehicle)
+    this.vehicles[index]['isOpen'] = true   
+    this.lat = (this.vehicles[index]['deviceInfo']['latitude']==0)?this.lat:this.vehicles[index]['deviceInfo']['latitude']
+    this.lng = (this.vehicles[index]['deviceInfo']['longitude']==0)?this.lng:this.vehicles[index]['deviceInfo']['longitude']
+    this.fetchDeviceAddress(this.vehicles[index]['deviceInfo']);
+
+
+    /*this.deviceMarkers[index]['isOpen'] = true 
     this.lat = this.deviceMarkers[index]['latitude'] 
     this.lng = this.deviceMarkers[index]['longitude']  
-    this.fetchDeviceAddress(marker);
+    this.fetchDeviceAddress(marker);*/
   }
 
  clickedMarker(infowindow) {

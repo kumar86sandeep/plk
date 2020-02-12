@@ -37,10 +37,10 @@
             <ul *ngIf="vehicles?.length>0" class="chat-box">
                 <li *ngFor="let vehicle of vehicles;let i = index" id="vehicle_{{i}}"  (click)="activateClass(vehicle,i)" [ngClass]="{'active': i==selectedIndex}">
                     <div class="user-image">
-                    <img [src]="vehicle?.drivers[0]?.profile_pic ? vehicle?.drivers[0]?.profile_pic : 'assets/images/user-pic.jpg'">
+                    <img [src]="vehicle?.drivers[0]?.profile_pic ? vehicle?.drivers[0]?.profile_pic : 'assets/images/default-user.png'">
                     </div>
                     <div class="user-details">
-                         <a (click)="redirectToDeviceLogs(vehicle)" >{{vehicle?.device_id}}</a>
+                         <a (click)="redirectToDeviceLogs(vehicle)" >{{vehicle?.vehicle_no}}</a>
                          <span>{{vehicle?.drivers[0]?.first_name}}</span>
                     </div>
                 </li>
@@ -67,7 +67,7 @@
         [longitude]="lng"
         [zoom]="zoom"
         [disableDefaultUI]="false"
-        [zoomControl]="true"
+        [zoomControl]="true"         
         [streetViewControl]="true"
         >      
         <agm-marker 
@@ -80,15 +80,17 @@
             >
             
           <agm-info-window [isOpen]="vechicle?.deviceInfo?.isOpen" #infowindow>
+         
             <div class="user-map-info-outer">
               
               <div class="user-map-info-content">
-                <strong><a routerLink="/home/device-logs/{{vechicle?.deviceInfo?.devices_NO}}">{{vechicle?.deviceInfo?.devices_NO}}</a></strong>
-                <p class="user-map-info-content-name">vechicle?.drivers[0]?.first_name</p>
+                <strong><a routerLink="/home/device-logs/{{vechicle?.deviceInfo?.devices_NO}}">{{vechicle?.vehicle_no}}</a></strong>
+                <p class="user-map-info-content-name">{{vechicle?.drivers[0]?.first_name}} {{vechicle?.drivers[0]?.last_name ? vechicle?.drivers[0].last_name : ''}}</p>
               </div>
 
               <div class="user-map-info-pic">
-                <img src="assets/images/user-pic.jpg">
+                
+                <img [src]="vechicle?.drivers[0]?.profile_pic ? vechicle?.drivers[0]?.profile_pic : 'assets/images/default-user.png'">
               </div>
 
             </div>

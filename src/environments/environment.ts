@@ -7,7 +7,7 @@ export const environment = {
   PAGESIZE:20,
   APP_NAME:'PLK',
   DB_CONNECTION_URL:'http://52.52.35.177:3000/api/',
- // DB_CONNECTION_URL:'http://localhost:3000/api/',
+//  DB_CONNECTION_URL:'http://localhost:3000/api/',
 
   PLKCONFIG:{
     URL:'http://fmsweb.aimatics.net/',

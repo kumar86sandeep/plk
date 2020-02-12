@@ -1,6 +1,8 @@
 <div class="container-fluid">
-        <div class="row">
+        <div class="row min-100vh">
+            
            <div class="col-md-3">
+              <perfect-scrollbar style="max-width: 100%; max-height: 540px;">
               <div class="left-second-box-outer"> 
                   <div class="row">
                       <div class="col-md-6">
@@ -13,8 +15,9 @@
                 </div>
                 <app-device-info-leftside  [vehicle]="vehicle"></app-device-info-leftside>
              </div>
+            </perfect-scrollbar>
            </div>
-
+          
            <div class="col-md-9 px-0">
           
                   
@@ -39,12 +42,12 @@
             <div class="user-map-info-outer">
               
               <div class="user-map-info-content">
-                        <strong><a href="javascript:void(0)" (click)="clickedInfoWindow(vehicle.deviceInfo)">{{vehicle?.deviceInfo?.devices_NO}}</a></strong>
-                <p class="user-map-info-content-name">{{vehicle?.drivers[0]?.first_name ? vehicle?.drivers[0].first_name : ''}}</p>
+                        <strong><a href="javascript:void(0)" (click)="clickedInfoWindow(vehicle.deviceInfo)">{{vehicle?.vehicle_no}}</a></strong>
+                <p class="user-map-info-content-name"> {{vehicle?.drivers[0]?.first_name ? vehicle?.drivers[0].first_name : ''}} {{vehicle?.drivers[0]?.last_name ? vehicle?.drivers[0].last_name : ''}}</p>
               </div>
 
               <div class="user-map-info-pic">
-                <img [src]="vehicle?.drivers[0]?.profile_pic ? vehicle?.drivers[0].profile_pic :'assets/images/user-pic.jpg'">
+                <img [src]="vehicle?.drivers[0]?.profile_pic ? vehicle?.drivers[0].profile_pic :'assets/images/default-user.png'">
               </div>
 
             </div>

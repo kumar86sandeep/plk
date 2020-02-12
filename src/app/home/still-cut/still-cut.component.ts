@@ -103,7 +103,7 @@ export class StillCutComponent implements OnInit {
    }
 
    requestEvent(filename){   
-
+   
     Swal.fire({
       title: 'Are you sure to request this?',
       icon: 'warning',
@@ -115,11 +115,11 @@ export class StillCutComponent implements OnInit {
         var formData: any = new FormData();
         
        
-        formData.append("parameter", `"{currentVideo:${filename}}"`);
+        formData.append("parameter", `"{lastKey:${this.stillObj.lastKey},jpgTime:${this.stillObj.jpgTime}}"`);
 
         
         this.commonUtilsService.showPageLoader('Processing...'); 
-          this.dataService.gensorLightVideoRequest(formData, this.deviceId).subscribe(response => {
+          this.dataService.stillcutImagesRequest(formData, this.deviceId).subscribe(response => {
             this.commonUtilsService.hidePageLoader(); 
             if(response.error){
               Swal.fire(

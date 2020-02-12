@@ -17,7 +17,7 @@ export class ApiIntercepter implements HttpInterceptor {
       apiReq = request.clone({ url: environment.DB_CONNECTION_URL+`${request.url}` });      
     }
     
-    console.log('apiReq',apiReq);
+    //console.log('apiReq',apiReq);
     return next.handle(apiReq);
 
   }
