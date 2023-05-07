@@ -29,7 +29,7 @@
     "bn-ng-idle": "^1.0.1",
     "bootstrap": "^4.4.0",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "ng6-toastr-notifications": "^1.0.4",
     "ngx-perfect-scrollbar": "^8.0.0",
     "ngx-take-until-destroy": "^5.4.0",
